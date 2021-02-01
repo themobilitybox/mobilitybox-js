@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:latest'
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: yarn install
+      - run:
+          name: test
+          command: npm run cover
+      # TODO: Re-Add me as soon as we reach 100% coverage
+      # - run:
+      #     name: check test-coverage
+      #     command: npm run check-coverage
+      - run:
+          name: report test-coverage
+          command: npm run report-coverage || true
+      - run:
+          name: build
+          command: npm run build
+      - run:
+          name: release
+          command: npm run semantic-release || true
