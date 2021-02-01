@@ -20,7 +20,7 @@ Thats why we strongly encourage you to use [commitizen](https://github.com/commi
 
 Testing
 --------
-We use automatic tests in this project based on [mocha](https://mochajs.org) and [chai](https://www.chaijs.com) transpiled with babel so you can use ES6 in testing. Test with `npm test`.
+We use automatic tests in this project based on [mocha](https://mochajs.org) and [chai](https://www.chaijs.com) transpiled with [babel](https://babeljs.io) so you can use ES6 in testing. Test with `npm test`.
 
 During development we recommend to test it in parallel to each change. Use the following script for it:
 
@@ -33,6 +33,15 @@ We check the test coverage automatically with [nyc](https://github.com/istanbulj
 
 - Check your coverage with: `npm run cover`
 - We also recommend checking the coverage results graphically: `open coverage/lcov-report/index.html`
+
+
+Build
+------
+We build to a `./dist` folder with [babel](https://babeljs.io) and [webpack](https://webpack.js.org). It consists of a transpiled version for use in node. And a browser version (in expanded and minified).
+
+- Build with `npm run build`
+
+Do not commit the `dist` folder, as it will be build by the Continous-Integration pipeline on release.
 
 
 Tutorial hint
