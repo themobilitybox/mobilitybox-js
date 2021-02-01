@@ -7,16 +7,27 @@
   "author": "René Meye <rene.meye@vesputi.com> (https://themobilitybox.com/)",
   "license": "MIT",
   "devDependencies": {
+    "babel": "6.23.0",
+    "babel-cli": "6.26.0",
+    "babel-preset-es2015": "6.24.1",
+    "chai": "4.2.0",
     "commitizen": "4.2.3",
-    "cz-conventional-changelog": "3.3.0"
+    "cz-conventional-changelog": "3.3.0",
+    "mocha": "8.2.1"
   },
-	"scripts": {
-		"commit": "cz"
-	},
-	"config": {
-		"commitizen": {
-			"path": "cz-conventional-changelog"
-		}
-	}
-
+  "scripts": {
+    "commit": "cz",
+    "watch:test": "npm test -- --watch --watch-extensions",
+    "test": "mocha ./src/index.test.js --require babel-core/register"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
 }

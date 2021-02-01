@@ -18,6 +18,15 @@ Thats why we strongly encourage you to use [commitizen](https://github.com/commi
 `npm run commit`
 
 
+Testing
+--------
+We use automatic tests in this project based on [mocha](https://mochajs.org) and [chai](https://www.chaijs.com) transpiled with babel so you can use ES6 in testing. Test with `npm test`.
+
+During development we recommend to test it in parallel to each change. Use the following script for it:
+
+`npm run watch:test`
+
+
 Tutorial hint
 --------------
 Check out this tutorial. It helps to understand at least a few things on how we develop here: https://egghead.io/lessons/javascript-introduction-to-how-to-write-an-open-source-javascript-library
