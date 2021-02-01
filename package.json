@@ -18,7 +18,8 @@
   "scripts": {
     "commit": "cz",
     "watch:test": "npm test -- --watch --watch-extensions",
-    "test": "mocha ./src/index.test.js --require babel-core/register"
+    "test": "mocha ./src/index.test.js --require babel-core/register",
+    "cover": "nyc --reporter=lcov --reporter=text-summary npm test"
   },
   "config": {
     "commitizen": {
@@ -29,5 +30,9 @@
     "presets": [
       "es2015"
     ]
+  },
+  "dependencies": {
+    "istanbul": "0.4.5",
+    "nyc": "15.1.0"
   }
 }

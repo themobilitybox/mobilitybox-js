@@ -27,6 +27,14 @@ During development we recommend to test it in parallel to each change. Use the f
 `npm run watch:test`
 
 
+Test Coverage
+--------------
+We check the test coverage automatically with [nyc](https://github.com/istanbuljs/nyc) we expect 100% code coverage. The code coverage ist just a reminder if we forget to test something, it is not a replacement for smart-thinking whilst writing tests ;)
+
+- Check your coverage with: `npm run cover`
+- We also recommend checking the coverage results graphically: `open coverage/lcov-report/index.html`
+
+
 Tutorial hint
 --------------
 Check out this tutorial. It helps to understand at least a few things on how we develop here: https://egghead.io/lessons/javascript-introduction-to-how-to-write-an-open-source-javascript-library
