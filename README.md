@@ -3,7 +3,7 @@
 A fast and easy to use wrapper for [the Mobilitybox](https://themobilitybox.com/). Get scheduling data at ease.
 
 - [Live Demo](https://developer.themobilitybox.com/examples/1/code)
-- [Code Examples (including Deparutes, Live-Data, Trip-Pearl-String, Search-Near-User)](https://developer.themobilitybox.com/examples)
+- [Code Examples (including Departures, Live-Data, Trip-Pearl-String, Search-Near-User)](https://developer.themobilitybox.com/examples)
 
 [<img src="example.png" alt="Mobilitybox example" width="840" />](https://developer.themobilitybox.com/examples/1/code)
 
@@ -15,6 +15,8 @@ A fast and easy to use wrapper for [the Mobilitybox](https://themobilitybox.com/
 ## Example
 
 ```js
+const { Mobilitybox } = require('mobilitybox');
+
 const mobilitybox_access_token = 'hallo_welt123';
 const mobilitybox = new Mobilitybox(mobilitybox_access_token);
 mobilitybox.get_attributions((attributions)=>{
@@ -48,14 +50,14 @@ Install with NPM (`npm install mobilitybox`) or Yarn (`yarn add mobilitybox`), t
 import Mobilitybox from 'mobilitybox';
 
 // or require in Node / Browserify
-const Mobilitybox = require('mobilitybox');
+const { Mobilitybox } = require('mobilitybox');
 ```
 
 Or use a browser build directly:
 
 ```html
-<script src="https://unpkg.com/mobilitybox-js/mobilitybox.min.js"></script> <!-- minified build -->
-<script src="https://unpkg.com/mobilitybox-js/mobilitybox.js"></script> <!-- dev build -->
+<script src="https://unpkg.com/mobilitybox/dist/mobilitybox.min.js"></script> <!-- minified build -->
+<script src="https://unpkg.com/mobilitybox/dist/mobilitybox.js"></script> <!-- dev build -->
 ```
 
 ## API Reference
