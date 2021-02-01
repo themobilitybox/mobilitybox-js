@@ -1,11 +1,11 @@
-# Mobilitybox.js [![Build](https://img.shields.io/circleci/build/github/themobilitybox/mobilitybox.js/main?style=for-the-badge)](https://app.circleci.com/pipelines/github/themobilitybox/mobilitybox.js)[![Coverage](https://img.shields.io/codecov/c/github/themobilitybox/mobilitybox.js?style=for-the-badge)](https://codecov.io/gh/themobilitybox/mobilitybox.js)[![Version](https://img.shields.io/npm/v/mobilitybox?style=for-the-badge)](https://www.npmjs.com/package/mobilitybox)
+# Mobilitybox.js [![Build](https://img.shields.io/circleci/build/github/themobilitybox/mobilitybox-js/main?style=for-the-badge)](https://app.circleci.com/pipelines/github/themobilitybox/mobilitybox-js)[![Coverage](https://img.shields.io/codecov/c/github/themobilitybox/mobilitybox-js?style=for-the-badge)](https://codecov.io/gh/themobilitybox/mobilitybox-js)[![Version](https://img.shields.io/npm/v/mobilitybox?style=for-the-badge)](https://www.npmjs.com/package/mobilitybox)
 
 A fast and easy to use wrapper for [the Mobilitybox](https://themobilitybox.com/). Get scheduling data at ease.
 
 - [Live Demo](https://developer.themobilitybox.com/examples/1/code)
 - [Code Examples (including Deparutes, Live-Data, Trip-Pearl-String, Search-Near-User)](https://developer.themobilitybox.com/examples)
 
-[<img src="example.png" alt="Mobilitybox example" width="400" />](https://developer.themobilitybox.com/examples/1/code)
+[<img src="example.png" alt="Mobilitybox example" width="840" />](https://developer.themobilitybox.com/examples/1/code)
 
 ### Projects based on Mobilitybox
 
