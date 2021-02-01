@@ -1,0 +1,22 @@
+{
+  "name": "Mobilitybox.js",
+  "version": "1.0.0",
+  "description": "A fast and easy to use wrapper for the Mobilitybox. Get scheduling data at ease.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/themobilitybox/mobilitybox-js",
+  "author": "René Meye <rene.meye@vesputi.com> (https://themobilitybox.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "commitizen": "4.2.3",
+    "cz-conventional-changelog": "3.3.0"
+  },
+	"scripts": {
+		"commit": "cz"
+	},
+	"config": {
+		"commitizen": {
+			"path": "cz-conventional-changelog"
+		}
+	}
+
+}
