@@ -3,7 +3,7 @@ const axios = require('axios');
 /**
  * The main class to interact with the The Mobilitybox API.
  */
-class Mobilitybox {
+export class Mobilitybox {
   /**
    * Create the API access object with your API key
    * @param {String} access_token You API Access Token
@@ -83,7 +83,7 @@ class Mobilitybox {
 /**
  * The class representing a single Station
  */
-class MobilityboxStation {
+export class MobilityboxStation {
   /**
    * @typedef StationDataHash
    * @type {object}
@@ -122,7 +122,7 @@ class MobilityboxStation {
 /**
  * The class representing a Departure
  */
-class MobilityboxDeparture {
+export class MobilityboxDeparture {
   constructor(departure_parameters, mobilitybox) {
     this.mobilitybox = mobilitybox;
 
@@ -140,7 +140,7 @@ class MobilityboxDeparture {
   }
 }
 
-class MobilityboxEventTime {
+export class MobilityboxEventTime {
   constructor(event_time_parameters, mobilitybox) {
     if(!event_time_parameters){
       this.scheduled_at = null;
@@ -167,7 +167,7 @@ class MobilityboxEventTime {
 /**
  * This class represents a single trip.
  */
-class MobilityboxTrip {
+export class MobilityboxTrip {
   /**
    * @typedef TripsHash
    * @type {object}
@@ -227,7 +227,7 @@ class MobilityboxTrip {
 /**
  * The class for a single stop in a trip
  */
-class MobilityboxStop {
+export class MobilityboxStop {
   constructor(stop_parameters, mobilitybox) {
     this.mobilitybox = mobilitybox;
 
@@ -237,11 +237,3 @@ class MobilityboxStop {
     this.arrival = new MobilityboxEventTime(stop_parameters.arrival);
   }
 }
-
-module.exports = {
-  Mobilitybox: Mobilitybox,
-  MobilityboxDeparture: MobilityboxDeparture,
-  MobilityboxStop: MobilityboxStop,
-  MobilityboxEventTime: MobilityboxEventTime,
-  MobilityboxTrip: MobilityboxEventTime
-};

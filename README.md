@@ -47,7 +47,7 @@ Install with NPM (`npm install mobilitybox`) or Yarn (`yarn add mobilitybox`), t
 
 ```js
 // import as an ES module
-import Mobilitybox from 'mobilitybox';
+import { Mobilitybox } from 'mobilitybox';
 
 // or require in Node / Browserify
 const { Mobilitybox } = require('mobilitybox');
@@ -58,6 +58,8 @@ Or use a browser build directly:
 ```html
 <script src="https://unpkg.com/mobilitybox/dist/mobilitybox.min.js"></script> <!-- minified build -->
 <script src="https://unpkg.com/mobilitybox/dist/mobilitybox.js"></script> <!-- dev build -->
+
+window.Mobilitybox
 ```
 
 ## API Reference

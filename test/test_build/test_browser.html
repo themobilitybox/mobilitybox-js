@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Your Website</title>
+
+	<script src="../../dist/mobilitybox.min.js"></script>
+</head>
+
+<body>
+
+	<script type="application/javascript">
+		function log(){
+			const myDiv = document.createElement("p");
+			myDiv.innerHTML = [...arguments].join("\t");
+			document.body.appendChild(myDiv);
+		}
+
+		log("logging works");
+
+		const mobilitybox_access_token = 'hallo_welt123';
+		const mobilitybox = new Mobilitybox(mobilitybox_access_token);
+		mobilitybox.get_attributions((attributions)=>{
+		  log('Attributions: '+attributions.text);
+		})
+
+		mobilitybox.find_stations_by_name("Hamburg-Dammtor", (stations)=>{
+		  var station = stations[0];
+
+		  log('Next Departures for Station: '+station.name);
+
+		  station.get_next_departures((departures)=>{
+		    departures.map((departure)=>{
+		      log(
+		        " - ",
+		        departure.departure_time.scheduled_at_formated(),
+		        departure.line_name,
+		        departure.headsign
+		      )
+		    })
+		  });
+		});
+	</script>
+
+	Above here you should see a simple departure monitor... if not than check the console; Have you run `npm run build`?
+
+</body>
+
+</html>

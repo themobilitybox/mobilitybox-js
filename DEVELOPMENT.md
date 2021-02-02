@@ -44,6 +44,21 @@ We build to a `./dist` folder with [babel](https://babeljs.io) and [webpack](htt
 Do not commit the `dist` folder, as it will be build by the Continous-Integration pipeline on release.
 
 
+Testing Builds
+---------------
+As we produce a result in `./dist`, which is actually used in the npm package and in the browser we need to test that too. Especially after we changed something on the build process.
+
+We have three main use cases: Import in Node via ES modules, Require in Node on commonjs and use in Browser.
+
+So you should test the following - all three show a simple departure monitor if it works:
+```
+npm run build
+node test/test_build/test_import_as_es_module.mjs
+node test/test_build/test_import_as_commonjs.js
+open test/test_build/test_browser.html
+```
+
+
 Tutorial hint
 --------------
 Check out this tutorial. It helps to understand at least a few things on how we develop here: https://egghead.io/lessons/javascript-introduction-to-how-to-write-an-open-source-javascript-library

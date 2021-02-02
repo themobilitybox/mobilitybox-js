@@ -5,7 +5,8 @@ export default {
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: 'Mobilitybox',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'Mobilitybox'
   },
   devtool: 'source-map',
 }
