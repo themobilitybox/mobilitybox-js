@@ -1,5 +1,16 @@
 import { Mobilitybox } from './index.js'
 import { expect } from 'chai';
+import nock from 'nock'
+
+// Configure Axios (http-framework) for getting compatible with nock (mocking http-requests)
+import axios from 'axios';
+axios.defaults.adapter = require('axios/lib/adapters/http');
+
+function mock(path, return_value){
+  return nock('https://api.themobilitybox.com')
+  .get('/v1'+path)
+  .reply(200, return_value)
+}
 
 describe('Mobilitybox', ()=>{
   it('initializes with an api token', ()=>{
@@ -19,6 +30,9 @@ describe('Mobilitybox', ()=>{
 
   it('returns proper attributions', ()=>{
     const mobilitybox = new Mobilitybox('abc');
+
+    mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"})
+
     function get_attributions(){
       return new Promise(resolve => {
         mobilitybox.get_attributions((attributions)=>{
@@ -30,7 +44,7 @@ describe('Mobilitybox', ()=>{
     return get_attributions().then((attributions)=>{
       expect(attributions.html).to.be.a('string', "attributions.html");
       expect(attributions.url).to.be.a('string', "attributions.url");
-      expect(attributions.text).to.eq("Mobilitybox | Shown data: Delfi e.V.", "attributions.text");
+      expect(attributions.text).to.eq("mocked attributions", "attributions.text");
     });
 
   });
