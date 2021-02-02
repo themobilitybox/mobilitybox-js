@@ -16,6 +16,24 @@ describe('Mobilitybox', ()=>{
     const mobilitybox = new Mobilitybox('abc', 'https://foobar.lol/v42');
     expect(mobilitybox.base_url).to.eq("https://foobar.lol/v42");
   });
+
+  it('returns proper attributions', ()=>{
+    const mobilitybox = new Mobilitybox('abc');
+    function get_attributions(){
+      return new Promise(resolve => {
+        mobilitybox.get_attributions((attributions)=>{
+          resolve(attributions);
+        });
+      });
+    };
+
+    return get_attributions().then((attributions)=>{
+      expect(attributions.html).to.be.a('string', "attributions.html");
+      expect(attributions.url).to.be.a('string', "attributions.url");
+      expect(attributions.text).to.eq("Mobilitybox | Shown data: Delfi e.V.", "attributions.text");
+    });
+
+  });
 });
 
 describe( 'Integration', ()=>{
