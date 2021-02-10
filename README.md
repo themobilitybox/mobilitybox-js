@@ -59,7 +59,7 @@ Or use a browser build directly:
 <script src="https://unpkg.com/mobilitybox/dist/mobilitybox.min.js"></script> <!-- minified build -->
 <script src="https://unpkg.com/mobilitybox/dist/mobilitybox.js"></script> <!-- dev build -->
 
-window.Mobilitybox
+window.Mobilitybox()
 ```
 
 ## API Reference
