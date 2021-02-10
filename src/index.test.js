@@ -6,9 +6,10 @@ import nock from 'nock'
 import axios from 'axios';
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-function mock(path, return_value){
+function mock(path, return_value, query){
   return nock('https://api.themobilitybox.com')
   .get('/v1'+path)
+  .query(query || true)
   .reply(200, return_value)
 }
 
@@ -45,6 +46,65 @@ describe('Mobilitybox', ()=>{
       expect(attributions.html).to.be.a('string', "attributions.html");
       expect(attributions.url).to.be.a('string', "attributions.url");
       expect(attributions.text).to.eq("mocked attributions", "attributions.text");
+    });
+
+  });
+
+  it('calls the correct search_by_name api endpoint', ()=>{
+    const mobilitybox = new Mobilitybox('abc');
+    const query_parameters = { query: "hbf" };
+
+    const expected_result = [
+        {
+          "name": "Duisburg Hbf",
+          "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
+          "position": {
+            "latitude": 51.430453,
+            "longitude": 6.774528
+          }
+        }
+    ];
+
+    mock('/stations/search_by_name.json', expected_result, query_parameters);
+
+    const find_stations_by_name = () => (new Promise(resolve =>
+      mobilitybox.find_stations_by_name(query_parameters, stations => resolve(stations))
+    ));
+
+    return find_stations_by_name().then((stations)=>{
+      expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
+    });
+
+  });
+
+  it('calls the correct search_by_name api endpoint with location', ()=>{
+    const mobilitybox = new Mobilitybox('abc');
+
+    const query_parameter_with_location = {
+      query: "hbf",
+      longitude: 11.984178293741593,
+      latitude: 51.4783408027985
+    };
+
+    const expected_result = [
+        {
+          "name": "Duisburg Hbf",
+          "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
+          "position": {
+            "latitude": 51.430453,
+            "longitude": 6.774528
+          }
+        }
+    ];
+
+    mock('/stations/search_by_name.json', expected_result, query_parameter_with_location);
+
+    const find_stations_by_name = () => (new Promise(resolve =>
+      mobilitybox.find_stations_by_name(query_parameter_with_location, stations => resolve(stations))
+    ));
+
+    return find_stations_by_name().then((stations)=>{
+      expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
     });
 
   });

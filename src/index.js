@@ -22,11 +22,19 @@ export class Mobilitybox {
 
   /**
    * Find stations by name
-   * @param {String} query The query to use for station name search
+   * @param findOptions The query to use for station name search
+   * @param {String} findOptions.query The query to use for station name search
+   * @param {number} [findOptions.longitude] The longitude for the location bias (optional)
+   * @param {number} [findOptions.latitude] The latitude for the location bias (optional)
    * @param {stationCallback} callback A callback receiving the stations
    */
-  find_stations_by_name(query, callback){
-    axios.get(this.base_url+'/stations/search_by_name.json?query='+query)
+  find_stations_by_name({ query, longitude, latitude }, callback){
+    let uri = this.base_url+'/stations/search_by_name.json?query='+query
+    if (longitude && latitude) {
+      uri += `&longitude=${longitude}&latitude=${latitude}`
+    }
+
+    axios.get(uri)
       .then(response => callback(response.data.map((station_data)=> new MobilityboxStation(station_data, this))))
   }
 
