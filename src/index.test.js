@@ -119,7 +119,7 @@ describe( 'Integration', ()=>{
       console.log('Attributions: '+attributions.text);
     })
 
-    mobilitybox.find_stations_by_name("Hamburg-Dammtor", (stations)=>{
+    mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
       var station = stations[0];
 
       console.log('Next Departures for Station: '+station.name);

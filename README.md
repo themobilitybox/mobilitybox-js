@@ -23,7 +23,7 @@ mobilitybox.get_attributions((attributions)=>{
   console.log('Attributions: '+attributions.text);
 })
 
-mobilitybox.find_stations_by_name("Hamburg-Dammtor", (stations)=>{
+mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
   var station = stations[0];
 
   console.log('Next Departures for Station: '+station.name);
@@ -72,9 +72,9 @@ Base object for the Mobility framework.
 - *access_token* | is the code needed for accessing the API. (Create one at: https://developer.themobilitybox.com/dashboard/tokens)
 - *base_url* (optional) | if you choose to use an other API endpoint feel free. (DEFAULT: `https://api.themobilitybox.com/v1`)
 
-#### Mobilitybox.find_stations_by_name(query, callback)
+#### Mobilitybox.find_stations_by_name({ query, longitude, latitude }, callback)
 
-Station search by name. Callback returns with a list of *MobilityboxStation* objects.
+Station search by name, optionally be also favoring stations close the location at (longitude, latitude). Callback returns with a list of *MobilityboxStation* objects.
 - *query* | a string to search for
 
 #### Mobilitybox.find_stations_by_position(position, callback)
