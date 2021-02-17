@@ -14,19 +14,21 @@ function mock(path, return_value, query){
 }
 
 describe('Mobilitybox', ()=>{
-  it('initializes with an api token', ()=>{
-    const mobilitybox = new Mobilitybox('abc');
-    expect(mobilitybox.access_token).to.eq("abc");
-  });
+  describe('attributes',()=>{
+    it('initializes with an api token', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.access_token).to.eq("abc");
+    });
 
-  it('can initialize without a base url', ()=>{
-    const mobilitybox = new Mobilitybox('abc');
-    expect(mobilitybox.base_url).to.eq("https://api.themobilitybox.com/v1");
-  });
+    it('can initialize without a base url', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.base_url).to.eq("https://api.themobilitybox.com/v1");
+    });
 
-  it('can initialize with a given base url', ()=>{
-    const mobilitybox = new Mobilitybox('abc', 'https://foobar.lol/v42');
-    expect(mobilitybox.base_url).to.eq("https://foobar.lol/v42");
+    it('can initialize with a given base url', ()=>{
+      const mobilitybox = new Mobilitybox('abc', 'https://foobar.lol/v42');
+      expect(mobilitybox.base_url).to.eq("https://foobar.lol/v42");
+    });
   });
 
   describe('get_attributions()',()=>{
