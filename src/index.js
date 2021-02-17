@@ -106,8 +106,9 @@ export class MobilityboxStation {
   constructor(station_data, mobilitybox) {
     this.id = station_data.id;
     this.name = station_data.name;
-    this.position = {}
+    this.position = null;
     if(station_data.position && typeof(station_data.position.latitude) === 'number' && typeof(station_data.position.longitude) === 'number'){
+      this.position = {};
       this.position.latitude = station_data.position.latitude;
       this.position.longitude = station_data.position.longitude;
     }
