@@ -101,6 +101,25 @@ describe('Mobilitybox', ()=>{
 
     });
 
+  describe('build_station()', ()=>{
+    it('can create a MobilityboxStation by its data not from API', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      var station = mobilitybox.build_station({
+        name: "a_station_name",
+        id: "a_station_id",
+        position: {
+          latitude: 1.2345,
+          longitude: 1.2345
+        }
+      })
+
+      expect(station.name).to.eq("a_station_name");
+      expect(station.id).to.eq("a_station_id");
+      expect(station.position.latitude).to.eq(1.2345);
+      expect(station.position.longitude).to.eq(1.2345);
+      expect(station.mobilitybox).to.eq(mobilitybox);
+    });
+  });
   });
 });
 
