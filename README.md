@@ -95,9 +95,25 @@ Returns an object including the Attributions suitable for HTML or as text and li
 #### Mobilitybox.get_trip(trip_id, callback)    
 Callback returns with a *MobilityboxTrip* object based on its id.
 
+#### mobilitybox.build_station(station_data)
+This creates a new `MobilityboxStation` object based on the given data without making a network request.
+This is espacially useful when taking station_data from outside the framework like from an object on a map.
+
+
+```
+const mobilitybox = new Mobilitybox('abc');
+var station = mobilitybox.build_station({
+  name: "a_station_name",
+  id: "a_station_id",
+  position: {
+    latitude: 1.2345,
+    longitude: 1.2345
+  }
+})
+```
+
 ### MobilityboxStation | A Station object
 
-#### new MobilityboxStation()
 TODO: Add more documetation
 
 <!--

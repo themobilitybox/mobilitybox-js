@@ -77,6 +77,14 @@ export class Mobilitybox {
     return cancelable(axios.get(this.base_url+'/trips/'+trip_id+'.json'))
       .then(response => new MobilityboxTrip(response.data, this))
   }
+
+  /**
+   * Create a station from raw data
+   * @param {StationDataHash} station_data Raw Station data
+   */
+  build_station(station_data){
+    return new MobilityboxStation(station_data, this)
+  }
 }
 
 /**
@@ -98,6 +106,11 @@ export class MobilityboxStation {
   constructor(station_data, mobilitybox) {
     this.id = station_data.id;
     this.name = station_data.name;
+    this.position = {}
+    if(station_data.position && typeof(station_data.position.latitude) === 'number' && typeof(station_data.position.longitude) === 'number'){
+      this.position.latitude = station_data.position.latitude;
+      this.position.longitude = station_data.position.longitude;
+    }
     this.mobilitybox = mobilitybox;
   }
 
