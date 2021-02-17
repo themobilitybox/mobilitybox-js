@@ -30,7 +30,7 @@ export class Mobilitybox {
    */
   find_stations_by_name({ query, longitude, latitude }, callback){
     let uri = this.base_url+'/stations/search_by_name.json?query='+query
-    if (longitude && latitude) {
+    if (typeof longitude == 'number' && typeof latitude == 'number') {
       uri += `&longitude=${longitude}&latitude=${latitude}`
     }
 
