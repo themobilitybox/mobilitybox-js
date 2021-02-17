@@ -1,4 +1,4 @@
-import { Mobilitybox } from './index.js'
+import { Mobilitybox, MobilityboxStation } from './index.js'
 import { expect } from 'chai';
 import nock from 'nock'
 
@@ -140,7 +140,75 @@ describe('Mobilitybox', ()=>{
 
 describe('MobilityboxStation', ()=>{
   describe('attributes',()=>{
-    it('has to be implemented');
+    it('has all expected attributes',()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = new MobilityboxStation({
+        id: "some_id",
+        name: "some_name",
+        position: {
+          latitude: 1.234,
+          longitude: 2.345
+        },
+      }, mobilitybox);
+
+      expect(station.name, 'name').to.eq("some_name")
+      expect(station.id, 'id').to.eq("some_id")
+      expect(station.mobilitybox, 'mobilitybox').to.eq(mobilitybox)
+      expect(station.position, 'position').to.not.be.null
+      expect(station.position.latitude, 'latitude').to.eq(1.234)
+      expect(station.position.longitude, 'longitude').to.eq(2.345)
+    });
+    it('creates with position if there is one given',()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = new MobilityboxStation({
+        id: "some_id",
+        name: "some_name",
+        position: {
+          latitude: 1.234,
+          longitude: 2.345
+        }
+      }, mobilitybox);
+
+      expect(station.position).to.not.be.null
+      expect(station.position.latitude).to.eq(1.234)
+      expect(station.position.longitude).to.eq(2.345)
+    });
+    it('creates without position if there is none given',()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = new MobilityboxStation({
+        id: "some_id",
+        name: "some_name"
+      }, mobilitybox);
+
+      expect(station.position).to.be.null
+    });
+    it('creates without position if one of latitude/longitude is not given',()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = new MobilityboxStation({
+        id: "some_id",
+        name: "some_name",
+        position: {
+          latitude: 1.234
+        }
+      }, mobilitybox);
+
+      expect(station.position).to.be.null
+    });
+    it('creates a position on [0, 0]',()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = new MobilityboxStation({
+        id: "some_id",
+        name: "some_name",
+        position: {
+          latitude: 0,
+          longitude: 0
+        }
+      }, mobilitybox);
+
+      expect(station.position).to.not.be.null
+      expect(station.position.latitude).to.eq(0)
+      expect(station.position.longitude).to.eq(0)
+    });
   });
   describe('get_next_departures()',()=>{
     it('has to be implemented');
