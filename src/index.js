@@ -159,7 +159,7 @@ export class MobilityboxEventTime {
       this.predicted_at = null;
     }else{
       this.scheduled_at = new Date(event_time_parameters.scheduled_at);
-      this.predicted_at = new Date(event_time_parameters.predicted_at);
+      this.predicted_at = (event_time_parameters.predicted_at)?new Date(event_time_parameters.predicted_at):null;
     }
   }
 
