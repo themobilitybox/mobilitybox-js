@@ -222,7 +222,7 @@ export class MobilityboxTrip {
    *
    * @return {MobilityboxStation} Startin Station
    */
-  from_station(){
+  origins_from(){
     return this.stops[0].station;
   }
 
@@ -231,7 +231,7 @@ export class MobilityboxTrip {
    *
    * @return {MobilityboxStation} Destination station
    */
-  to_station(){
+  destination(){
     return this.stops[this.stops.length-1].station;
   }
 }

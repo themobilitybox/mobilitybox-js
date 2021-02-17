@@ -178,11 +178,11 @@ describe('MobilityboxTrip', ()=>{
     it('has to be implemented');
   });
 
-  describe('from_station()',()=>{
+  describe('origins_from()',()=>{
     it('has to be implemented');
   });
 
-  describe('to_station()',()=>{
+  describe('destination()',()=>{
     it('has to be implemented');
   });
 
