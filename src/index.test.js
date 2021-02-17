@@ -101,6 +101,15 @@ describe('Mobilitybox', ()=>{
 
     });
 
+    it('warns if query is shorter than 3 chars');
+
+    it('never returns after the call got canceled')
+  });
+
+  describe('find_stations_by_position()', ()=>{
+    it('has to be implemented');
+  });
+
   describe('build_station()', ()=>{
     it('can create a MobilityboxStation by its data not from API', ()=>{
       const mobilitybox = new Mobilitybox('abc');
@@ -120,6 +129,68 @@ describe('Mobilitybox', ()=>{
       expect(station.mobilitybox).to.eq(mobilitybox);
     });
   });
+
+  describe('get_trip()', ()=>{
+    it('has to be implemented');
+  });
+});
+
+
+describe('MobilityboxStation', ()=>{
+  describe('attributes',()=>{
+    it('has to be implemented');
+  });
+  describe('get_next_departures()',()=>{
+    it('has to be implemented');
+  });
+});
+
+describe('MobilityboxDeparture', ()=>{
+  describe('attributes',()=>{
+    it('has to be implemented');
+  });
+});
+
+describe('MobilityboxEventTime', ()=>{
+  describe('attributes',()=>{
+    it('has to be implemented');
+  });
+
+  describe('scheduled_at_formated()',()=>{
+    it('has to be implemented');
+  });
+
+  describe('predicted_at_formated()',()=>{
+    it('has to be implemented');
+  });
+
+  describe('scheduled_at_date_formated()',()=>{
+    it('has to be implemented');
+  });
+});
+
+describe('MobilityboxTrip', ()=>{
+  describe('attributes',()=>{
+    it('has to be implemented');
+  });
+
+  describe('date_formated()',()=>{
+    it('has to be implemented');
+  });
+
+  describe('from_station()',()=>{
+    it('has to be implemented');
+  });
+
+  describe('to_station()',()=>{
+    it('has to be implemented');
+  });
+
+});
+
+describe('MobilityboxStop', ()=>{
+  describe('attributes',()=>{
+    it('has to be implemented');
   });
 });
 
