@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { cancelable } = require('cancelable-promise');
 
 /**
  * The main class to interact with the The Mobilitybox API.
@@ -26,25 +27,23 @@ export class Mobilitybox {
    * @param {String} findOptions.query The query to use for station name search
    * @param {number} [findOptions.longitude] The longitude for the location bias (optional)
    * @param {number} [findOptions.latitude] The latitude for the location bias (optional)
-   * @param {stationCallback} callback A callback receiving the stations
    */
-  find_stations_by_name({ query, longitude, latitude }, callback){
+  find_stations_by_name({ query, longitude, latitude }){
     let uri = this.base_url+'/stations/search_by_name.json?query='+query
     if (typeof longitude == 'number' && typeof latitude == 'number') {
       uri += `&longitude=${longitude}&latitude=${latitude}`
     }
 
-    axios.get(uri)
-      .then(response => callback(response.data.map((station_data)=> new MobilityboxStation(station_data, this))))
+    return cancelable(axios.get(uri))
+      .then(response => response.data.map((station_data)=> new MobilityboxStation(station_data, this)));
   }
 
   /**
    * Find stations by positions
    * @param {Object} position An object containing latitude and longitude for positions
-   * @param {stationCallback} callback A callback receiving the stations
    */
-  find_stations_by_position(position, callback){
-    axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude)
+  find_stations_by_position(position){
+    cancelable(axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude))
       .then(response => callback(response.data.map((station_data)=> new MobilityboxStation(station_data, this))))
   }
 
@@ -64,27 +63,19 @@ export class Mobilitybox {
 
    /**
     * Get the attribution text and url to use in your app
-    * @param {attributionsCallback} callback A callback receiving the attributions as HTML, text and a URL
     */
-  get_attributions(callback){
-    axios.get(this.base_url+'/attributions.json')
-      .then(response => callback(response.data))
+  get_attributions(){
+    return cancelable(axios.get(this.base_url+'/attributions.json'))
+      .then(response => response.data)
   }
-
-  /**
-   * This callback receives a trip.
-   * @callback tripCallback
-   * @param {MobilityboxTrip} attributions
-   */
 
    /**
     * Get a trip by ID
     * @param {String} trip_id The Trip ID
-    * @param {tripCallback} callback A callback receiving a single trip
     */
-  get_trip(trip_id, callback){
-    axios.get(this.base_url+'/trips/'+trip_id+'.json')
-      .then(response => callback(new MobilityboxTrip(response.data, this)))
+  get_trip(trip_id){
+    return cancelable(axios.get(this.base_url+'/trips/'+trip_id+'.json'))
+      .then(response => new MobilityboxTrip(response.data, this))
   }
 }
 
@@ -118,12 +109,12 @@ export class MobilityboxStation {
 
   /**
    * Fetch Next Departures for this Station
-   * @param {departuresCallback} callback A callback receiving departures for this station and time
    * @param {Date} time A time to receive departures for (defaults to now)
    */
-  get_next_departures(callback, time = Date.now()) {
-    axios.get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time)
-      .then(response => callback(response.data.map((station_data)=> new MobilityboxDeparture(station_data, this.mobilitybox))))
+  get_next_departures(time = Date.now()) {
+    return cancelable(axios
+      .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time))
+      .then(response => response.data.map((station_data)=> new MobilityboxDeparture(station_data, this.mobilitybox)))
   }
 }
 

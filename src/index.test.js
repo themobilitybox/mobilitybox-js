@@ -29,82 +29,76 @@ describe('Mobilitybox', ()=>{
     expect(mobilitybox.base_url).to.eq("https://foobar.lol/v42");
   });
 
-  it('returns proper attributions', ()=>{
-    const mobilitybox = new Mobilitybox('abc');
+  describe('get_attributions()',()=>{
+    it('returns proper attributions', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
 
-    mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"})
+      mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"})
 
-    function get_attributions(){
-      return new Promise(resolve => {
-        mobilitybox.get_attributions((attributions)=>{
-          resolve(attributions);
-        });
+      return mobilitybox.get_attributions().then((attributions)=>{
+        expect(attributions.html).to.be.a('string', "attributions.html");
+        expect(attributions.url).to.be.a('string', "attributions.url");
+        expect(attributions.text).to.eq("mocked attributions", "attributions.text");
       });
-    };
 
-    return get_attributions().then((attributions)=>{
-      expect(attributions.html).to.be.a('string', "attributions.html");
-      expect(attributions.url).to.be.a('string', "attributions.url");
-      expect(attributions.text).to.eq("mocked attributions", "attributions.text");
     });
 
+    it('never returns after the get_attributions call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      return never_returns_if_canceled(mobilitybox.get_attributions());
+    });
   });
 
-  it('calls the correct search_by_name api endpoint', ()=>{
-    const mobilitybox = new Mobilitybox('abc');
-    const query_parameters = { query: "hbf" };
+  describe('find_stations_by_name()', ()=>{
+    it('calls the correct search_by_name api endpoint', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const query_parameters = { query: "hbf" };
 
-    const expected_result = [
-        {
-          "name": "Duisburg Hbf",
-          "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
-          "position": {
-            "latitude": 51.430453,
-            "longitude": 6.774528
+      const expected_result = [
+          {
+            "name": "Duisburg Hbf",
+            "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
+            "position": {
+              "latitude": 51.430453,
+              "longitude": 6.774528
+            }
           }
-        }
-    ];
+      ];
 
-    mock('/stations/search_by_name.json', expected_result, query_parameters);
+      mock('/stations/search_by_name.json', expected_result, query_parameters);
 
-    const find_stations_by_name = () => (new Promise(resolve =>
-      mobilitybox.find_stations_by_name(query_parameters, stations => resolve(stations))
-    ));
+      return mobilitybox.find_stations_by_name(query_parameters).then((stations)=>{
+        expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
+      });
 
-    return find_stations_by_name().then((stations)=>{
-      expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
     });
 
-  });
+    it('calls the correct search_by_name api endpoint with location', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
 
-  it('calls the correct search_by_name api endpoint with location', ()=>{
-    const mobilitybox = new Mobilitybox('abc');
+      const query_parameter_with_location = {
+        query: "hbf",
+        longitude: 11.984178293741593,
+        latitude: 51.4783408027985
+      };
 
-    const query_parameter_with_location = {
-      query: "hbf",
-      longitude: 11.984178293741593,
-      latitude: 51.4783408027985
-    };
-
-    const expected_result = [
-        {
-          "name": "Duisburg Hbf",
-          "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
-          "position": {
-            "latitude": 51.430453,
-            "longitude": 6.774528
+      const expected_result = [
+          {
+            "name": "Duisburg Hbf",
+            "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
+            "position": {
+              "latitude": 51.430453,
+              "longitude": 6.774528
+            }
           }
-        }
-    ];
+      ];
 
-    mock('/stations/search_by_name.json', expected_result, query_parameter_with_location);
+      mock('/stations/search_by_name.json', expected_result, query_parameter_with_location);
 
-    const find_stations_by_name = () => (new Promise(resolve =>
-      mobilitybox.find_stations_by_name(query_parameter_with_location, stations => resolve(stations))
-    ));
+      return mobilitybox.find_stations_by_name(query_parameter_with_location).then((stations)=>{
+        expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
+      });
 
-    return find_stations_by_name().then((stations)=>{
-      expect(stations[0].name).to.be.a('string', "Duisburg Hbf");
     });
 
   });
@@ -137,3 +131,27 @@ describe( 'Integration', ()=>{
     });
   })
 });
+
+
+const never_returns_if_canceled = function(promise_to_be_checked){
+  const promise = new Promise((resolve, reject)=>{
+    const request = promise_to_be_checked
+      .then((attributions)=>{
+        reject("This shall never be called")
+      })
+      .catch((attributions)=>{
+        reject("This shall never be called")
+      });
+    expect(request.cancel, "request.cancel").to.be.a('function');
+    request.cancel()
+    setTimeout(()=>{
+      if(request.isCanceled()){
+        resolve()
+      }else{
+        reject()
+      }
+    },10)
+  });
+
+  return promise
+}
