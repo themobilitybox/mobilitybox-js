@@ -188,7 +188,7 @@ export class MobilityboxTrip {
    * @typedef TripsHash
    * @type {object}
    * @property {string} id - Trip ID
-   * @property {string} name - Name of the strip
+   * @property {string} name - Name of the trip
    * @property {Array} stops - Raw stops data
    */
 
@@ -200,9 +200,9 @@ export class MobilityboxTrip {
   constructor(trip_parameters, mobilitybox) {
     this.mobilitybox = mobilitybox;
 
-    this.id = trip_parameters.id;
-    this.name = trip_parameters.name;
-    this.stops = trip_parameters.stops.map((stop_data)=> new MobilityboxStop(stop_data, this.mobilitybox));
+    this.id = trip_parameters.id || null;
+    this.name = trip_parameters.name || null;
+    this.stops = (trip_parameters.stops || []).map((stop_data)=> new MobilityboxStop(stop_data, this.mobilitybox));
   }
 
   /**

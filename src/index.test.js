@@ -1,4 +1,4 @@
-import { Mobilitybox, MobilityboxStation, MobilityboxDeparture } from './index.js'
+import { Mobilitybox, MobilityboxStation, MobilityboxDeparture, MobilityboxTrip } from './index.js'
 import { expect } from 'chai';
 import nock from 'nock'
 
@@ -316,20 +316,114 @@ describe('MobilityboxEventTime', ()=>{
 });
 
 describe('MobilityboxTrip', ()=>{
+  const short_trip_data = {
+    id: "a_trip_id",
+    name: "a_trip_name",
+    stops: [{
+      station: {
+        id: "a_station_id",
+        name: "Hogsmead Centraal",
+        postion: {
+          latitude: 12.345,
+          longitude: 23.456,
+        }
+      },
+      status: "a_status",
+      departure: {
+        scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+        predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+        platform: "1"
+      },
+      arrival: {
+        scheduled_at: 1609457022000, //Fri Jan 01 2021 00:23:42 GMT+0100 (CET)
+        predicted_at: 1609458143000, //Fri Jan 01 2021 00:42:23 GMT+0100 (CET)
+        platform: "1"
+      }
+    },
+    {
+      station: {
+        id: "an_other_station_id",
+        name: "Kings Cross International",
+        postion: {
+          latitude: 12.345,
+          longitude: 23.456,
+        }
+      },
+      status: "a_status",
+      departure: {
+        scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+        predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+        platform: "9 3/4"
+      },
+      arrival: {
+        scheduled_at: 1609457022000, //Fri Jan 01 2021 00:23:42 GMT+0100 (CET)
+        predicted_at: 1609458143000, //Fri Jan 01 2021 00:42:23 GMT+0100 (CET)
+        platform: "9 3/4"
+      }
+    }]
+  };
+
   describe('attributes',()=>{
-    it('has to be implemented');
+    it('takes the mobilitybox object', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip({}, mobilitybox);
+
+      expect(trip.mobilitybox).to.eq(mobilitybox);
+    });
+    it('has the right attributes after initialization', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
+
+      expect(trip.name).to.eq("a_trip_name");
+      expect(trip.stops.length).to.eq(2);
+      expect(trip.id).to.eq("a_trip_id");
+    });
+
+    it('deals with not given values properly', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip({}, mobilitybox);
+
+      expect(trip.id).to.be.null;
+      expect(trip.stops.length).to.eq(0);
+      expect(trip.name).to.be.null;
+    });
   });
 
   describe('date_formated()',()=>{
-    it('has to be implemented');
+    it('returns a good trip date', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
+
+      expect(trip.date_formated()).to.eq("1.1.2021");
+    });
+
+    it('returns only first date if trip gets via multiple days', ()=>{
+      var long_running_trip = JSON.parse(JSON.stringify(short_trip_data));
+      long_running_trip.stops[1].arrival.scheduled_at = 1609457022000; //Sat Jan 02 2021 06:23:42 GMT+0100 (CET)
+
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip(long_running_trip, mobilitybox);
+
+      expect(trip.date_formated()).to.eq("1.1.2021");
+    });
   });
 
   describe('origins_from()',()=>{
-    it('has to be implemented');
+    it('returns the correct origin station', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
+
+      expect(trip.origins_from().name).to.eq("Hogsmead Centraal");
+    })
   });
 
   describe('destination()',()=>{
-    it('has to be implemented');
+    it('returns the correct destination station', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
+
+      expect(trip.destination().name).to.eq("Kings Cross International");
+    })
   });
 
 });
