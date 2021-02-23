@@ -114,6 +114,42 @@ var station = mobilitybox.build_station({
 
 ### MobilityboxStation | A Station object
 
+### MobilityboxDeparture | A departure of a trip on a station
+
+#### Attributes
+- `headsign` - *string* | The direction as indicated on the vehicle. Usually the final station. //e.g. "Hogsmead"
+- `line_name` - *string* | Name of the Line given by its authority //e.g. "5972"
+- `type` - *object* | Kind and Product helpful to differentiate trams and busses
+  - TODO: Document the possible types {kind	string, product	string }
+- `provider` - *string* | Authority of the trip. //e.g. "Hogwarts Express Railway Authorities"
+- `platform` - *string* | Platform name if  //e.g. "9 3/4" can be `null` if none is given
+- `departure_time` *MobilityboxEventTime* | The time referencing the departure. With prediction and scheduled time. (Prediction can be null if none is given.)
+- `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
+
+#### Methods
+- none
+
+#### Example
+```
+mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
+  var station = stations[0];
+
+  console.log('Next Departures for Station: '+station.name);
+
+  station.get_next_departures((departures)=>{
+    departures.map((departure)=>{
+      console.log(
+        " - ",
+        departure.departure_time.scheduled_at_formated(),
+        departure.line_name,
+        departure.headsign  
+      )
+    })
+  });
+});
+```
+
+
 TODO: Add more documetation
 
 <!--
