@@ -149,6 +149,22 @@ mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
 });
 ```
 
+### MobilityboxTrip | A Trip object
+TODO: Add some background information what a trip actually is.
+
+#### Attributes
+- `name` - *string* | The name of the Trip
+  - TODO: What tha hack is the trip name?
+- `stops`- *array* | An ordered list of all stops as `MobilityboxStop` on this trip. Including its station, departure and arrival times.
+  - TODO: Document what the status means?
+- `id` - *string* | An unique identifier for this trip. Its value might not be stable in future API versions. It is stable over multiple timetable updates, if the trip doesn't change.
+- `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
+
+#### Methods
+- `date_formated()` - returns the date of the trip in an human readable form. If the trip runs over multiple days, it gives you the first one.
+  - TODO: Or is this the Betriebstag? (What if a trips starts at 26:00:00h?)
+- `origins_from()` - returns the starting station of the trip as `MobilityboxStation`
+- `destination()` - returns the last station of the trip as `MobilityboxStop`
 
 TODO: Add more documetation
 
