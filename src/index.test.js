@@ -1,4 +1,4 @@
-import { Mobilitybox, MobilityboxStation } from './index.js'
+import { Mobilitybox, MobilityboxStation, MobilityboxDeparture } from './index.js'
 import { expect } from 'chai';
 import nock from 'nock'
 
@@ -216,8 +216,71 @@ describe('MobilityboxStation', ()=>{
 });
 
 describe('MobilityboxDeparture', ()=>{
-  describe('attributes',()=>{
-    it('has to be implemented');
+  describe('attributes', ()=>{
+    it('uses a better interface for scheduled and predicted departure time'
+      //Do it more flat like
+      // expect(departure.scheduled_at).to.not.be.undefined;
+      // expect(departure.predicted_at).to.not.be.undefined;
+      // expect(departure.scheduled_at).to.not.be.null;
+      // expect(departure.predicted_at).to.not.be.null;
+    );
+
+    it('can return a date object for further use');
+    it('can handle time-zones');
+
+
+    it('has the right attributes after initialization', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const departure = new MobilityboxDeparture({
+        trip: {
+          id: "a_trip_id",
+          headsign: "hogwarts",
+          line_name: "5972",
+          type: "steam_express",
+          provider: "Hogwarts Express Railway Authorities"
+        },
+        departure: {
+          scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+          predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+          platform: "9 3/4"
+        },
+      }, mobilitybox);
+
+      expect(departure.id).to.eq("a_trip_id");
+      expect(departure.headsign).to.eq("hogwarts");
+      expect(departure.line_name).to.eq("5972");
+      expect(departure.type).to.eq("steam_express");
+      expect(departure.provider).to.eq("Hogwarts Express Railway Authorities");
+      expect(departure.platform).to.eq("9 3/4");
+      expect(departure.mobilitybox).to.eq(mobilitybox);
+
+      expect(departure.departure_time.scheduled_at).to.not.be.undefined;
+      expect(departure.departure_time.predicted_at).to.not.be.undefined;
+      expect(departure.departure_time.scheduled_at).to.not.be.null;
+      expect(departure.departure_time.predicted_at).to.not.be.null;
+      expect(departure.departure_time.scheduled_at_formated()).to.eq("1:23");
+      expect(departure.departure_time.predicted_at_formated()).to.eq("1:42");
+
+      expect(departure.platform).to.eq("9 3/4");
+    });
+  });
+
+  it('returns a null if predicted_at is not given',()=>{
+    const mobilitybox = new Mobilitybox('abc');
+    const departure = new MobilityboxDeparture({
+      trip: {
+      },
+      departure: {
+        scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      },
+    }, mobilitybox);
+
+    expect(departure.departure_time.scheduled_at).to.not.be.undefined;
+    expect(departure.departure_time.predicted_at).to.not.be.undefined;
+    expect(departure.departure_time.scheduled_at).to.not.be.null;
+    expect(departure.departure_time.predicted_at).to.be.null;
+    expect(departure.departure_time.scheduled_at_formated()).to.eq("1:23");
+    expect(departure.departure_time.predicted_at_formated()).to.eq("");
   });
 });
 
