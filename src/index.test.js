@@ -236,7 +236,10 @@ describe('MobilityboxDeparture', ()=>{
           id: "a_trip_id",
           headsign: "hogwarts",
           line_name: "5972",
-          type: "steam_express",
+          type: {
+            kind:	'steam_express',
+            product: 'Hogwarts Express'
+          },
           provider: "Hogwarts Express Railway Authorities"
         },
         departure: {
@@ -249,7 +252,7 @@ describe('MobilityboxDeparture', ()=>{
       expect(departure.id).to.eq("a_trip_id");
       expect(departure.headsign).to.eq("hogwarts");
       expect(departure.line_name).to.eq("5972");
-      expect(departure.type).to.eq("steam_express");
+      expect(departure.type.kind).to.eq("steam_express");
       expect(departure.provider).to.eq("Hogwarts Express Railway Authorities");
       expect(departure.platform).to.eq("9 3/4");
       expect(departure.mobilitybox).to.eq(mobilitybox);
@@ -281,6 +284,16 @@ describe('MobilityboxDeparture', ()=>{
     expect(departure.departure_time.predicted_at).to.be.null;
     expect(departure.departure_time.scheduled_at_formated()).to.eq("1:23");
     expect(departure.departure_time.predicted_at_formated()).to.eq("");
+  });
+
+  it('returns a null if platform is not given',()=>{
+    const mobilitybox = new Mobilitybox('abc');
+    const departure = new MobilityboxDeparture({
+      trip: {},
+      departure: {},
+    }, mobilitybox);
+
+    expect(departure.platform).to.be.null;
   });
 });
 

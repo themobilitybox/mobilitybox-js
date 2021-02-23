@@ -139,16 +139,19 @@ export class MobilityboxDeparture {
   constructor(departure_parameters, mobilitybox) {
     this.mobilitybox = mobilitybox;
 
-    this.id = departure_parameters.trip.id;
+    this.id = departure_parameters.trip.id || null;
 
-    this.departure_time = new MobilityboxEventTime(departure_parameters.departure)
-    this.platform = departure_parameters.departure.platform;
+    this.departure_time = new MobilityboxEventTime(departure_parameters.departure);
+    this.platform = departure_parameters.departure.platform || null;
 
-    this.headsign = departure_parameters.trip.headsign;
-    this.line_name = departure_parameters.trip.line_name;
-    this.type = departure_parameters.trip.type;
+    this.headsign = departure_parameters.trip.headsign || null;
+    this.line_name = departure_parameters.trip.line_name || null;
+    this.type = departure_parameters.trip.type || {
+      kind: null,
+      product: null
+    };
 
-    this.provider = departure_parameters.trip.provider;
+    this.provider = departure_parameters.trip.provider || null;
 
   }
 }
