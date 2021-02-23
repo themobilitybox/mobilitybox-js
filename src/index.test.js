@@ -355,6 +355,11 @@ describe( 'Integration', ()=>{
   })
 });
 
+describe( 'access_token', ()=>{
+  it('sends the token to all endpoints')
+  it('shows a good warning if a wrong access_token is used')
+})
+
 
 const never_returns_if_canceled = function(promise_to_be_checked){
   const promise = new Promise((resolve, reject)=>{
