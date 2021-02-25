@@ -594,14 +594,14 @@ describe('MobilityboxTrip', ()=>{
       expect(trip.date_formatted()).to.eq("1.1.2021");
     });
 
-    it('returns only first date if trip gets via multiple days', ()=>{
+    it('returns both days if trip gets via multiple days', ()=>{
       var long_running_trip = JSON.parse(JSON.stringify(short_trip_data));
-      long_running_trip.stops[1].arrival.scheduled_at = 1609457022000; //Sat Jan 02 2021 06:23:42 GMT+0100 (CET)
+      long_running_trip.stops[1].arrival.scheduled_at = 1609565022000; //Sat Jan 02 2021 06:23:42 GMT+0100 (CET)
 
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(long_running_trip, mobilitybox);
 
-      expect(trip.date_formatted()).to.eq("1.1.2021");
+      expect(trip.date_formatted()).to.equal("1.1.2021 - 2.1.2021");
     });
   });
 
