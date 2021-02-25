@@ -245,8 +245,44 @@ describe('MobilityboxStation', ()=>{
       expect(station.position.longitude).to.eq(0)
     });
   });
-  describe('get_next_departures()',()=>{
-    it('has to be implemented');
+  describe('get_next_departures()', ()=>{
+    it('calls the correct next_departure api endpoint', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = mobilitybox.build_station({id: "vesputi:station:foobar"});
+
+      const query_parameters = {station_id: "vesputi:station:foobar", time: Date.now()}
+
+      const expected_result = [{
+        trip: {
+          id: "a_trip_id",
+          headsign: "hogwarts",
+          line_name: "5972",
+          type: {
+            kind:	'steam_express',
+            product: 'Hogwarts Express'
+          },
+          provider: "Hogwarts Express Railway Authorities"
+        },
+        departure: {
+          scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+          predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+          platform: "9 3/4"
+        },
+      }];
+
+      mock('/departures.json', expected_result, query_parameters);
+
+      return station.get_next_departures({time: query_parameters.time}).then((departures)=>{
+        expect(departures[0].headsign).to.equal("hogwarts");
+      });
+
+    });
+
+    it('never returns after the call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const station = mobilitybox.build_station({id: "vesputi:station:foobar"});
+      return never_returns_if_canceled(station.get_next_departures());
+    })
   });
 });
 

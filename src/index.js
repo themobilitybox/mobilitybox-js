@@ -92,13 +92,6 @@ export class Mobilitybox {
  */
 export class MobilityboxStation {
   /**
-   * @typedef StationDataHash
-   * @type {object}
-   * @property {string} id - Station ID
-   * @property {string} name - Name of the Station
-   */
-
-  /**
    * Create a station from raw data
    * @param {StationDataHash} station_data Raw Station data
    * @param {Mobilitybox} mobilitybox Mobilitybox object (the main API object)
@@ -116,19 +109,14 @@ export class MobilityboxStation {
   }
 
   /**
-   * This callback receives departures
-   * @callback departuresCallback
-   * @param {MobilityboxDeparture[]} departures
-   */
-
-  /**
    * Fetch Next Departures for this Station
    * @param {Date} time A time to receive departures for (defaults to now)
    */
-  get_next_departures(time = Date.now()) {
+  get_next_departures(parameters) {
+    const time = (!!parameters && !!parameters.time)?parameters.time:Date.now()
     return cancelable(axios
       .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time))
-      .then(response => response.data.map((station_data)=> new MobilityboxDeparture(station_data, this.mobilitybox)))
+      .then(response => response.data.map((departure_data)=> new MobilityboxDeparture(departure_data, this.mobilitybox)))
   }
 }
 
