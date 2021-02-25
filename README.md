@@ -1,7 +1,5 @@
 # Mobilitybox.js [![Build](https://img.shields.io/circleci/build/github/themobilitybox/mobilitybox-js/main?style=for-the-badge)](https://app.circleci.com/pipelines/github/themobilitybox/mobilitybox-js)[![Coverage](https://img.shields.io/codecov/c/github/themobilitybox/mobilitybox-js?style=for-the-badge)](https://codecov.io/gh/themobilitybox/mobilitybox-js)[![Version](https://img.shields.io/npm/v/mobilitybox?style=for-the-badge)](https://www.npmjs.com/package/mobilitybox)
 
-# TODO: Update to use the Promise API
-
 A fast and easy to use wrapper for [the Mobilitybox](https://themobilitybox.com/). Get scheduling data at ease.
 
 - [Live Demo](https://developer.themobilitybox.com/examples/1/code)
@@ -21,7 +19,7 @@ const { Mobilitybox } = require('mobilitybox');
 
 const mobilitybox_access_token = 'hallo_welt123';
 const mobilitybox = new Mobilitybox(mobilitybox_access_token);
-mobilitybox.get_attributions((attributions)=>{
+mobilitybox.get_attributions().then((attributions)=>{
   console.log('Attributions: '+attributions.text);
 })
 
@@ -74,22 +72,22 @@ Base object for the Mobility framework.
 - *access_token* | is the code needed for accessing the API. (Create one at: https://developer.themobilitybox.com/dashboard/tokens)
 - *base_url* (optional) | if you choose to use an other API endpoint feel free. (DEFAULT: `https://api.themobilitybox.com/v1`)
 
-#### Mobilitybox.find_stations_by_name({ query, longitude, latitude }, callback)
+#### Mobilitybox.find_stations_by_name({ query, longitude, latitude })
 
-Station search by name, optionally be also favoring stations close the location at (longitude, latitude). Callback returns with a list of *MobilityboxStation* objects.
+Station search by name, optionally be also favoring stations close the location at (longitude, latitude). Returns with a list of *MobilityboxStation* objects.
 - *query* | a string to search for
 - *longitude* | (optional) prioritise results around this location (usefull for finding something like the closest main station to the user)
 - *latitude* | (optional) prioritise results around this location (usefull for finding something like the closest main station to the user)
 
 #### Mobilitybox.find_stations_by_position({longitude, latitude})
 
-Station search by a Geo-Position. Callback returns with a list of *MobilityboxStation* objects.
+Station search by a Geo-Position. Returns with a list of *MobilityboxStation* objects.
 - *longitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
 - *latitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
 
-#### Mobilitybox.get_attributions(callback)
+#### Mobilitybox.get_attributions()
 Returns an object including the Attributions suitable for HTML or as text and link.
-```
+```json
 {
   "html": "&lt;a href='https://www.themobilitybox.com/&apos;&gt;Mobilitybox | Shown data: Delfi e.V.&lt;/a&gt;",
   "text": "Mobilitybox | Shown data: Delfi e.V.",
@@ -100,9 +98,9 @@ Returns an object including the Attributions suitable for HTML or as text and li
 #### Mobilitybox.get_trip(trip_id)    
 returns with a *MobilityboxTrip* object based on its id.
 
-```
+```js
 const mobilitybox = new Mobilitybox('abc');
-var trip = mobilitybox.get_trip({id: "vesputi:trip:foobar"})
+var trip = await mobilitybox.get_trip({id: "vesputi:trip:foobar"})
 ```
 
 #### Mobilitybox.build_station(station_data)
@@ -110,7 +108,7 @@ This creates a new `MobilityboxStation` object based on the given data without m
 This is espacially useful when taking station_data from outside the framework like from an object on a map.
 
 
-```
+```js
 const mobilitybox = new Mobilitybox('abc');
 var station = mobilitybox.build_station({
   name: "a_station_name",
@@ -140,8 +138,8 @@ var station = mobilitybox.build_station({
 - none
 
 #### Example
-```
-mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
+```js
+mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }).then((stations)=>{
   var station = stations[0];
 
   console.log('Next Departures for Station: '+station.name);
@@ -160,18 +158,17 @@ mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
 ```
 
 ### MobilityboxTrip | A Trip object
-TODO: Add some background information what a trip actually is.
+A trip is a journey of a vehicle at a point in time. It starts somewhere, ends somewhere and stops multiple times in between.
 
 #### Attributes
 - `name` - *string* | The name of the Trip
-  - TODO: What tha hack is the trip name?
+  - TODO: Document what the name of a trip is.
 - `stops`- *array* | An ordered list of all stops as `MobilityboxStop` on this trip. Including its station, departure and arrival times.
 - `id` - *string* | An unique identifier for this trip. Its value might not be stable in future API versions. It is stable over multiple timetable updates, if the trip doesn't change.
 - `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
 
 #### Methods
-- `date_formatted()` - returns the date of the trip in an human readable form. If the trip runs over multiple days, it gives you the first one.
-  - TODO: Or is this the Betriebstag? (What if a trips starts at 26:00:00h?)
+- `date_formatted()` - returns the date of the trip in a german human readable form. e.g. "13.2.2020" If the trip runs over multiple days, it gives you both days. e.g. "13.2.2020 - 14.2.2020"
 - `origins_from()` - returns the starting station of the trip as `MobilityboxStation`
 - `destination()` - returns the last station of the trip as `MobilityboxStation`
 
@@ -190,8 +187,8 @@ An event time is used for departure times and also arrival times, it consists of
 - `predicted_at_date_formatted()` - *String* | Gives you the date as it is predicted (usually this is the same date as scheduled, but it might differ, espacially late in the day.) a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set.
 
 #### Example
-```
-station.get_next_departures((departures)=>{
+```js
+station.get_next_departures().then((departures)=>{
   departures.map((departure)=>{
     console.log(
       departure.departure_time.scheduled_at_formatted(),
@@ -207,7 +204,7 @@ An aggregation object that is describing a vehicle arriving and departuring at a
 #### Attributes
 
 - `station` - *MobilityboxStation* | The station on wich the vehicle stops.
-- `status`- *string* | TODO: Not clear right now.
+- `status`- *string* | TODO: Document what the status can be
 - `arrival` // *MobilityboxEventTime* | Time when the vehicle will come to the station. It might be an MobilityboxEventTime where the values are null if it is the first station on the trip or the information is unclear (sometimes this is not given for stations where a train waits a long time).
 - `departure` - *MobilityboxEventTime* | Time when the vehicle will leave the station. It might be an MobilityboxEventTime where the values are null if it is the last station on the trip (sometimes this is not given for stations where people are not meant to enter a train).
 
