@@ -17,17 +17,17 @@ describe('Mobilitybox', ()=>{
   describe('attributes',()=>{
     it('initializes with an api token', ()=>{
       const mobilitybox = new Mobilitybox('abc');
-      expect(mobilitybox.access_token).to.eq("abc");
+      expect(mobilitybox.access_token).to.equal("abc");
     });
 
     it('can initialize without a base url', ()=>{
       const mobilitybox = new Mobilitybox('abc');
-      expect(mobilitybox.base_url).to.eq("https://api.themobilitybox.com/v1");
+      expect(mobilitybox.base_url).to.equal("https://api.themobilitybox.com/v1");
     });
 
     it('can initialize with a given base url', ()=>{
       const mobilitybox = new Mobilitybox('abc', 'https://foobar.lol/v42');
-      expect(mobilitybox.base_url).to.eq("https://foobar.lol/v42");
+      expect(mobilitybox.base_url).to.equal("https://foobar.lol/v42");
     });
   });
 
@@ -40,7 +40,7 @@ describe('Mobilitybox', ()=>{
       return mobilitybox.get_attributions().then((attributions)=>{
         expect(attributions.html).to.be.a('string', "attributions.html");
         expect(attributions.url).to.be.a('string', "attributions.url");
-        expect(attributions.text).to.eq("mocked attributions", "attributions.text");
+        expect(attributions.text).to.equal("mocked attributions", "attributions.text");
       });
 
     });
@@ -142,11 +142,11 @@ describe('Mobilitybox', ()=>{
         }
       })
 
-      expect(station.name).to.eq("a_station_name");
-      expect(station.id).to.eq("a_station_id");
-      expect(station.position.latitude).to.eq(1.2345);
-      expect(station.position.longitude).to.eq(1.2345);
-      expect(station.mobilitybox).to.eq(mobilitybox);
+      expect(station.name).to.equal("a_station_name");
+      expect(station.id).to.equal("a_station_id");
+      expect(station.position.latitude).to.equal(1.2345);
+      expect(station.position.longitude).to.equal(1.2345);
+      expect(station.mobilitybox).to.equal(mobilitybox);
     });
   });
 
@@ -186,12 +186,12 @@ describe('MobilityboxStation', ()=>{
         },
       }, mobilitybox);
 
-      expect(station.name, 'name').to.eq("some_name")
-      expect(station.id, 'id').to.eq("some_id")
-      expect(station.mobilitybox, 'mobilitybox').to.eq(mobilitybox)
+      expect(station.name, 'name').to.equal("some_name")
+      expect(station.id, 'id').to.equal("some_id")
+      expect(station.mobilitybox, 'mobilitybox').to.equal(mobilitybox)
       expect(station.position, 'position').to.not.be.null
-      expect(station.position.latitude, 'latitude').to.eq(1.234)
-      expect(station.position.longitude, 'longitude').to.eq(2.345)
+      expect(station.position.latitude, 'latitude').to.equal(1.234)
+      expect(station.position.longitude, 'longitude').to.equal(2.345)
     });
     it('creates with position if there is one given',()=>{
       const mobilitybox = new Mobilitybox('abc');
@@ -205,8 +205,8 @@ describe('MobilityboxStation', ()=>{
       }, mobilitybox);
 
       expect(station.position).to.not.be.null
-      expect(station.position.latitude).to.eq(1.234)
-      expect(station.position.longitude).to.eq(2.345)
+      expect(station.position.latitude).to.equal(1.234)
+      expect(station.position.longitude).to.equal(2.345)
     });
     it('creates without position if there is none given',()=>{
       const mobilitybox = new Mobilitybox('abc');
@@ -241,8 +241,8 @@ describe('MobilityboxStation', ()=>{
       }, mobilitybox);
 
       expect(station.position).to.not.be.null
-      expect(station.position.latitude).to.eq(0)
-      expect(station.position.longitude).to.eq(0)
+      expect(station.position.latitude).to.equal(0)
+      expect(station.position.longitude).to.equal(0)
     });
   });
   describe('get_next_departures()', ()=>{
@@ -288,18 +288,6 @@ describe('MobilityboxStation', ()=>{
 
 describe('MobilityboxDeparture', ()=>{
   describe('attributes', ()=>{
-    it('uses a better interface for scheduled and predicted departure time'
-      //Do it more flat like
-      // expect(departure.scheduled_at).to.not.be.undefined;
-      // expect(departure.predicted_at).to.not.be.undefined;
-      // expect(departure.scheduled_at).to.not.be.null;
-      // expect(departure.predicted_at).to.not.be.null;
-    );
-
-    it('can return a date object for further use');
-    it('can handle time-zones');
-
-
     it('has the right attributes after initialization', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const departure = new MobilityboxDeparture({
@@ -320,22 +308,22 @@ describe('MobilityboxDeparture', ()=>{
         },
       }, mobilitybox);
 
-      expect(departure.id).to.eq("a_trip_id");
-      expect(departure.headsign).to.eq("hogwarts");
-      expect(departure.line_name).to.eq("5972");
-      expect(departure.type.kind).to.eq("steam_express");
-      expect(departure.provider).to.eq("Hogwarts Express Railway Authorities");
-      expect(departure.platform).to.eq("9 3/4");
-      expect(departure.mobilitybox).to.eq(mobilitybox);
+      expect(departure.id).to.equal("a_trip_id");
+      expect(departure.headsign).to.equal("hogwarts");
+      expect(departure.line_name).to.equal("5972");
+      expect(departure.type.kind).to.equal("steam_express");
+      expect(departure.provider).to.equal("Hogwarts Express Railway Authorities");
+      expect(departure.platform).to.equal("9 3/4");
+      expect(departure.mobilitybox).to.equal(mobilitybox);
 
       expect(departure.departure_time.scheduled_at).to.not.be.undefined;
       expect(departure.departure_time.predicted_at).to.not.be.undefined;
       expect(departure.departure_time.scheduled_at).to.not.be.null;
       expect(departure.departure_time.predicted_at).to.not.be.null;
-      expect(departure.departure_time.scheduled_at_formatted()).to.eq("1:23");
-      expect(departure.departure_time.predicted_at_formatted()).to.eq("1:42");
+      expect(departure.departure_time.scheduled_at_formatted()).to.equal("1:23");
+      expect(departure.departure_time.predicted_at_formatted()).to.equal("1:42");
 
-      expect(departure.platform).to.eq("9 3/4");
+      expect(departure.platform).to.equal("9 3/4");
     });
   });
 
@@ -353,7 +341,7 @@ describe('MobilityboxDeparture', ()=>{
     expect(departure.departure_time.predicted_at).to.not.be.undefined;
     expect(departure.departure_time.scheduled_at).to.not.be.null;
     expect(departure.departure_time.predicted_at).to.be.null;
-    expect(departure.departure_time.scheduled_at_formatted()).to.eq("1:23");
+    expect(departure.departure_time.scheduled_at_formatted()).to.equal("1:23");
     expect(departure.departure_time.predicted_at_formatted()).to.be.null;
   });
 
@@ -565,15 +553,15 @@ describe('MobilityboxTrip', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip({}, mobilitybox);
 
-      expect(trip.mobilitybox).to.eq(mobilitybox);
+      expect(trip.mobilitybox).to.equal(mobilitybox);
     });
     it('has the right attributes after initialization', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
 
-      expect(trip.name).to.eq("a_trip_name");
-      expect(trip.stops.length).to.eq(2);
-      expect(trip.id).to.eq("a_trip_id");
+      expect(trip.name).to.equal("a_trip_name");
+      expect(trip.stops.length).to.equal(2);
+      expect(trip.id).to.equal("a_trip_id");
     });
 
     it('deals with not given values properly', ()=>{
@@ -581,7 +569,7 @@ describe('MobilityboxTrip', ()=>{
       const trip = new MobilityboxTrip({}, mobilitybox);
 
       expect(trip.id).to.be.null;
-      expect(trip.stops.length).to.eq(0);
+      expect(trip.stops.length).to.equal(0);
       expect(trip.name).to.be.null;
     });
   });
@@ -591,7 +579,7 @@ describe('MobilityboxTrip', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
 
-      expect(trip.date_formatted()).to.eq("1.1.2021");
+      expect(trip.date_formatted()).to.equal("1.1.2021");
     });
 
     it('returns both days if trip gets via multiple days', ()=>{
@@ -610,7 +598,7 @@ describe('MobilityboxTrip', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
 
-      expect(trip.origins_from().name).to.eq("Hogsmead Centraal");
+      expect(trip.origins_from().name).to.equal("Hogsmead Centraal");
     })
   });
 
@@ -619,7 +607,7 @@ describe('MobilityboxTrip', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
 
-      expect(trip.destination().name).to.eq("Kings Cross International");
+      expect(trip.destination().name).to.equal("Kings Cross International");
     })
   });
 
@@ -631,7 +619,7 @@ describe('MobilityboxStop', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const stop = new MobilityboxStop({}, mobilitybox);
 
-      expect(stop.mobilitybox).to.eq(mobilitybox);
+      expect(stop.mobilitybox).to.equal(mobilitybox);
     });
 
     it('has all attributes', ()=>{
