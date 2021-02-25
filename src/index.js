@@ -167,10 +167,10 @@ export class MobilityboxEventTime {
     }
   }
 
-  scheduled_at_formated(){ return (!this.scheduled_at)?null:this._format_time(this.scheduled_at) };
-  predicted_at_formated(){ return (!this.predicted_at)?null:this._format_time(this.predicted_at) };
-  scheduled_at_date_formated(){ return (!this.scheduled_at)?null:this._format_date(this.scheduled_at) }
-  predicted_at_date_formated(){ return (!this.predicted_at)?null:this._format_date(this.predicted_at) }
+  scheduled_at_formatted(){ return (!this.scheduled_at)?null:this._format_time(this.scheduled_at) };
+  predicted_at_formatted(){ return (!this.predicted_at)?null:this._format_time(this.predicted_at) };
+  scheduled_at_date_formatted(){ return (!this.scheduled_at)?null:this._format_date(this.scheduled_at) }
+  predicted_at_date_formatted(){ return (!this.predicted_at)?null:this._format_date(this.predicted_at) }
 
   _format_time(time){
     return ""+time.getHours()+':'+("00" + time.getMinutes()).slice (-2)
@@ -211,14 +211,14 @@ export class MobilityboxTrip {
    *
    * @return {String} Human-readable String representation
    */
-  date_formated(){
-    var start_date_formated = this.stops[0].departure.scheduled_at_date_formated();
-    var end_date_formated = this.stops[this.stops.length-1].arrival.scheduled_at_date_formated();
+  date_formatted(){
+    var start_date_formatted = this.stops[0].departure.scheduled_at_date_formatted();
+    var end_date_formatted = this.stops[this.stops.length-1].arrival.scheduled_at_date_formatted();
 
-    if(start_date_formated === end_date_formated){
-      return start_date_formated;
+    if(start_date_formatted === end_date_formatted){
+      return start_date_formatted;
     }else{
-      return ""+start_date_formated+" - "+end_date_formated;
+      return ""+start_date_formatted+" - "+end_date_formatted;
     }
   }
 

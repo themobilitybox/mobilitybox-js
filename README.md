@@ -34,7 +34,7 @@ mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
     departures.map((departure)=>{
       console.log(
         " - ",
-        departure.departure_time.scheduled_at_formated(),
+        departure.departure_time.scheduled_at_formatted(),
         departure.line_name,
         departure.headsign  
       )
@@ -142,7 +142,7 @@ mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
     departures.map((departure)=>{
       console.log(
         " - ",
-        departure.departure_time.scheduled_at_formated(),
+        departure.departure_time.scheduled_at_formatted(),
         departure.line_name,
         departure.headsign  
       )
@@ -163,7 +163,7 @@ TODO: Add some background information what a trip actually is.
 - `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
 
 #### Methods
-- `date_formated()` - returns the date of the trip in an human readable form. If the trip runs over multiple days, it gives you the first one.
+- `date_formatted()` - returns the date of the trip in an human readable form. If the trip runs over multiple days, it gives you the first one.
   - TODO: Or is this the Betriebstag? (What if a trips starts at 26:00:00h?)
 - `origins_from()` - returns the starting station of the trip as `MobilityboxStation`
 - `destination()` - returns the last station of the trip as `MobilityboxStop`
@@ -177,18 +177,18 @@ An event time is used for departure times and also arrival times, it consists of
 - `predicted_at` - *Date* | The date object of the time when the departure/arrival will probable to happen. (As usually calculated by the control-room-software by knowing the vehicles current position.)  Is `null` if there is no prediction (predictions usually are only given a few minutes before departure/arrival time. So if you pull new data that might change.).
 
 #### Methods
-- `scheduled_at_formated()` - *String* | Gives you the scheduled time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (this would be very unusual).
-- `predicted_at_formated()` - *String* | Gives you the predicted time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (predictions usually are only given a few minutes before departure/arrival time. So if you pull new data that might change.).
-- `scheduled_at_date_formated()` - *String* | Gives you the date as it is scheduled as a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set (this would be very unusual).
-- `predicted_at_date_formated()` - *String* | Gives you the date as it is predicted (usually this is the same date as scheduled, but it might differ, espacially late in the day.) a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set.
+- `scheduled_at_formatted()` - *String* | Gives you the scheduled time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (this would be very unusual).
+- `predicted_at_formatted()` - *String* | Gives you the predicted time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (predictions usually are only given a few minutes before departure/arrival time. So if you pull new data that might change.).
+- `scheduled_at_date_formatted()` - *String* | Gives you the date as it is scheduled as a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set (this would be very unusual).
+- `predicted_at_date_formatted()` - *String* | Gives you the date as it is predicted (usually this is the same date as scheduled, but it might differ, espacially late in the day.) a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set.
 
 #### Example
 ```
 station.get_next_departures((departures)=>{
   departures.map((departure)=>{
     console.log(
-      departure.departure_time.scheduled_at_formated(),
-      departure.departure_time.predicted_at_formated()
+      departure.departure_time.scheduled_at_formatted(),
+      departure.departure_time.predicted_at_formatted()
     )
   });
 });

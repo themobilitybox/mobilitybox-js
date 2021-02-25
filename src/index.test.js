@@ -261,8 +261,8 @@ describe('MobilityboxDeparture', ()=>{
       expect(departure.departure_time.predicted_at).to.not.be.undefined;
       expect(departure.departure_time.scheduled_at).to.not.be.null;
       expect(departure.departure_time.predicted_at).to.not.be.null;
-      expect(departure.departure_time.scheduled_at_formated()).to.eq("1:23");
-      expect(departure.departure_time.predicted_at_formated()).to.eq("1:42");
+      expect(departure.departure_time.scheduled_at_formatted()).to.eq("1:23");
+      expect(departure.departure_time.predicted_at_formatted()).to.eq("1:42");
 
       expect(departure.platform).to.eq("9 3/4");
     });
@@ -282,8 +282,8 @@ describe('MobilityboxDeparture', ()=>{
     expect(departure.departure_time.predicted_at).to.not.be.undefined;
     expect(departure.departure_time.scheduled_at).to.not.be.null;
     expect(departure.departure_time.predicted_at).to.be.null;
-    expect(departure.departure_time.scheduled_at_formated()).to.eq("1:23");
-    expect(departure.departure_time.predicted_at_formated()).to.be.null;
+    expect(departure.departure_time.scheduled_at_formatted()).to.eq("1:23");
+    expect(departure.departure_time.predicted_at_formatted()).to.be.null;
   });
 
   it('returns a null if platform is not given',()=>{
@@ -336,14 +336,14 @@ describe('MobilityboxEventTime', ()=>{
     })
   });
 
-  describe('scheduled_at_formated()',()=>{
+  describe('scheduled_at_formatted()',()=>{
     it('works if data is set', ()=>{
       const event_time = new MobilityboxEventTime({
         scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
         platform: "1"
       });
 
-      expect(event_time.scheduled_at_formated()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.scheduled_at_formatted()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
     });
 
     it('returns null if data is not set', ()=>{
@@ -352,24 +352,24 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.scheduled_at_formated()).to.be.null
+      expect(event_time.scheduled_at_formatted()).to.be.null
     });
 
     it('returns null if no data is given', ()=>{
       const event_time = new MobilityboxEventTime();
 
-      expect(event_time.scheduled_at_formated()).to.be.null
+      expect(event_time.scheduled_at_formatted()).to.be.null
     });
   });
 
-  describe('predicted_at_formated()',()=>{
+  describe('predicted_at_formatted()',()=>{
     it('works if data is set', ()=>{
       const event_time = new MobilityboxEventTime({
         predicted_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
         platform: "1"
       });
 
-      expect(event_time.predicted_at_formated()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.predicted_at_formatted()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
     });
 
     it('returns null if data is not set', ()=>{
@@ -378,24 +378,24 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.predicted_at_formated()).to.be.null
+      expect(event_time.predicted_at_formatted()).to.be.null
     });
 
     it('returns null if no data is given', ()=>{
       const event_time = new MobilityboxEventTime();
 
-      expect(event_time.predicted_at_formated()).to.be.null
+      expect(event_time.predicted_at_formatted()).to.be.null
     });
   });
 
-  describe('scheduled_at_date_formated()',()=>{
+  describe('scheduled_at_date_formatted()',()=>{
     it('works if data is set', ()=>{
       const event_time = new MobilityboxEventTime({
         scheduled_at: 1609547022000, //Fri Jan 02 2021 01:23:42 GMT+0100 (CET)
         platform: "1"
       });
 
-      expect(event_time.scheduled_at_date_formated()).to.equal("2.1.2021")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.scheduled_at_date_formatted()).to.equal("2.1.2021")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
     });
 
     it('returns null if data is not set', ()=>{
@@ -404,24 +404,24 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.scheduled_at_date_formated()).to.be.null
+      expect(event_time.scheduled_at_date_formatted()).to.be.null
     });
 
     it('returns null if no data is given', ()=>{
       const event_time = new MobilityboxEventTime();
 
-      expect(event_time.scheduled_at_date_formated()).to.be.null
+      expect(event_time.scheduled_at_date_formatted()).to.be.null
     });
   });
 
-  describe('predicted_at_date_formated()',()=>{
+  describe('predicted_at_date_formatted()',()=>{
     it('works if data is set', ()=>{
       const event_time = new MobilityboxEventTime({
         predicted_at: 1609547022000, //Fri Jan 02 2021 01:23:42 GMT+0100 (CET)
         platform: "1"
       });
 
-      expect(event_time.predicted_at_date_formated()).to.equal("2.1.2021")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.predicted_at_date_formatted()).to.equal("2.1.2021")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
     });
 
     it('returns null if data is not set', ()=>{
@@ -430,13 +430,13 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.predicted_at_date_formated()).to.be.null
+      expect(event_time.predicted_at_date_formatted()).to.be.null
     });
 
     it('returns null if no data is given', ()=>{
       const event_time = new MobilityboxEventTime();
 
-      expect(event_time.predicted_at_date_formated()).to.be.null
+      expect(event_time.predicted_at_date_formatted()).to.be.null
     });
   });
 });
@@ -515,12 +515,12 @@ describe('MobilityboxTrip', ()=>{
     });
   });
 
-  describe('date_formated()',()=>{
+  describe('date_formatted()',()=>{
     it('returns a good trip date', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(short_trip_data, mobilitybox);
 
-      expect(trip.date_formated()).to.eq("1.1.2021");
+      expect(trip.date_formatted()).to.eq("1.1.2021");
     });
 
     it('returns only first date if trip gets via multiple days', ()=>{
@@ -530,7 +530,7 @@ describe('MobilityboxTrip', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const trip = new MobilityboxTrip(long_running_trip, mobilitybox);
 
-      expect(trip.date_formated()).to.eq("1.1.2021");
+      expect(trip.date_formatted()).to.eq("1.1.2021");
     });
   });
 
@@ -578,7 +578,7 @@ describe( 'Integration', ()=>{
         departures.map((departure)=>{
           console.log(
             " - ",
-            departure.departure_time.scheduled_at_formated(),
+            departure.departure_time.scheduled_at_formatted(),
             departure.line_name,
             departure.headsign
           )

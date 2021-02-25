@@ -16,7 +16,7 @@ mobilitybox.find_stations_by_name({ query: "Hamburg-Dammtor" }, (stations)=>{
     departures.map((departure)=>{
       console.log(
         " - ",
-        departure.departure_time.scheduled_at_formated(),
+        departure.departure_time.scheduled_at_formatted(),
         departure.line_name,
         departure.headsign
       )
