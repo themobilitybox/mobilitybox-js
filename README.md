@@ -78,11 +78,14 @@ Base object for the Mobility framework.
 
 Station search by name, optionally be also favoring stations close the location at (longitude, latitude). Callback returns with a list of *MobilityboxStation* objects.
 - *query* | a string to search for
+- *longitude* | (optional) prioritise results around this location (usefull for finding something like the closest main station to the user)
+- *latitude* | (optional) prioritise results around this location (usefull for finding something like the closest main station to the user)
 
-#### Mobilitybox.find_stations_by_position(position, callback)
+#### Mobilitybox.find_stations_by_position({longitude, latitude})
 
 Station search by a Geo-Position. Callback returns with a list of *MobilityboxStation* objects.
-- *postion* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
+- *longitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
+- *latitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
 
 #### Mobilitybox.get_attributions(callback)
 Returns an object including the Attributions suitable for HTML or as text and link.
@@ -94,10 +97,15 @@ Returns an object including the Attributions suitable for HTML or as text and li
 }
 ```
 
-#### Mobilitybox.get_trip(trip_id, callback)    
-Callback returns with a *MobilityboxTrip* object based on its id.
+#### Mobilitybox.get_trip(trip_id)    
+returns with a *MobilityboxTrip* object based on its id.
 
-#### mobilitybox.build_station(station_data)
+```
+const mobilitybox = new Mobilitybox('abc');
+var trip = mobilitybox.get_trip({id: "vesputi:trip:foobar"})
+```
+
+#### Mobilitybox.build_station(station_data)
 This creates a new `MobilityboxStation` object based on the given data without making a network request.
 This is espacially useful when taking station_data from outside the framework like from an object on a map.
 

@@ -103,13 +103,31 @@ describe('Mobilitybox', ()=>{
 
     });
 
-    it('warns if query is shorter than 3 chars');
-
-    it('never returns after the call got canceled')
+    it('never returns after the call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      return never_returns_if_canceled(mobilitybox.find_stations_by_name("foobar"));
+    })
   });
 
   describe('find_stations_by_position()', ()=>{
-    it('has to be implemented');
+    it('calls the correct search_by_position api endpoint', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const query_parameters = { latitude: 12.345, longitude: 23.456 };
+
+      const expected_result = [{"name": "Hogsmead"}];
+
+      mock('/stations/search_by_position.json', expected_result, query_parameters);
+
+      return mobilitybox.find_stations_by_position(query_parameters).then((stations)=>{
+        expect(stations[0].name).to.equal("Hogsmead");
+      });
+
+    });
+
+    it('never returns after the call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      return never_returns_if_canceled(mobilitybox.find_stations_by_position({}));
+    })
   });
 
   describe('build_station()', ()=>{
@@ -133,7 +151,24 @@ describe('Mobilitybox', ()=>{
   });
 
   describe('get_trip()', ()=>{
-    it('has to be implemented');
+    it('calls the correct trip api endpoint', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const trip_id = "vesputi:trip:foobar";
+
+      const expected_result = {"id": "vesputi:trip:foobar", stops: [{station:{name: "Hogsmead"}}]};
+
+      mock('/trips/'+trip_id+'.json', expected_result);
+
+      return mobilitybox.get_trip({id: trip_id}).then((trip)=>{
+        expect(trip.stops[0].station.name).to.equal("Hogsmead");
+      });
+
+    });
+
+    it('never returns after the call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      return never_returns_if_canceled(mobilitybox.get_trip({id: "foo"}));
+    })
   });
 });
 

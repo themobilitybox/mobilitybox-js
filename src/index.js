@@ -43,8 +43,8 @@ export class Mobilitybox {
    * @param {Object} position An object containing latitude and longitude for positions
    */
   find_stations_by_position(position){
-    cancelable(axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude))
-      .then(response => callback(response.data.map((station_data)=> new MobilityboxStation(station_data, this))))
+    return cancelable(axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude))
+      .then(response => response.data.map((station_data)=> new MobilityboxStation(station_data, this)))
   }
 
   /**
@@ -73,8 +73,8 @@ export class Mobilitybox {
     * Get a trip by ID
     * @param {String} trip_id The Trip ID
     */
-  get_trip(trip_id){
-    return cancelable(axios.get(this.base_url+'/trips/'+trip_id+'.json'))
+  get_trip({id}){
+    return cancelable(axios.get(this.base_url+'/trips/'+id+'.json'))
       .then(response => new MobilityboxTrip(response.data, this))
   }
 
