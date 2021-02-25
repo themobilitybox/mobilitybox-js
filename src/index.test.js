@@ -1,4 +1,4 @@
-import { Mobilitybox, MobilityboxStation, MobilityboxDeparture, MobilityboxTrip, MobilityboxEventTime } from './index.js'
+import { Mobilitybox, MobilityboxStation, MobilityboxDeparture, MobilityboxTrip, MobilityboxEventTime, MobilityboxStop } from './index.js'
 import { expect } from 'chai';
 import nock from 'nock'
 
@@ -556,7 +556,78 @@ describe('MobilityboxTrip', ()=>{
 
 describe('MobilityboxStop', ()=>{
   describe('attributes',()=>{
-    it('has to be implemented');
+    it('takes the mobilitybox object', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const stop = new MobilityboxStop({}, mobilitybox);
+
+      expect(stop.mobilitybox).to.eq(mobilitybox);
+    });
+
+    it('has all attributes', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const stop = new MobilityboxStop({
+        station: {
+          id: "a_station_id",
+          name: "Hogsmead Centraal",
+          postion: {
+            latitude: 12.345,
+            longitude: 23.456,
+          }
+        },
+        status: "a_status",
+        departure: {
+          scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+          predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+          platform: "1"
+        },
+        arrival: {
+          scheduled_at: 1609457022000, //Fri Jan 01 2021 00:23:42 GMT+0100 (CET)
+          predicted_at: 1609458143000, //Fri Jan 01 2021 00:42:23 GMT+0100 (CET)
+          platform: "1"
+        }
+      }, mobilitybox);
+
+      expect(stop.station.id, "stop.station").to.equal('a_station_id');
+      expect(stop.status, "stop.status").to.equal('a_status');
+      expect(stop.arrival.predicted_at_formatted(), "stop.arrival").to.equal('0:42');
+      expect(stop.departure.predicted_at_formatted(), "stop.departure").to.equal('1:42');
+    })
+
+    it('works with empty data given', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const stop = new MobilityboxStop({}, mobilitybox);
+
+      expect(stop.station, "stop.station").to.be.null;
+      expect(stop.status, "stop.status").to.be.null;
+      expect(stop.arrival, "stop.arrival").to.be.an('Object');
+      expect(stop.departure, "stop.departure").to.be.an('Object');
+      expect(stop.departure.predicted_at_formatted(), "stop.departure.predicted_at_formatted").to.be.null;
+    })
+
+    it('works without data given', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const stop = new MobilityboxStop(undefined, mobilitybox);
+
+      expect(stop.station, "stop.station").to.be.null;
+      expect(stop.status, "stop.status").to.be.null;
+      expect(stop.arrival, "stop.arrival").to.be.an('Object');
+      expect(stop.departure, "stop.departure").to.be.an('Object');
+    })
+
+    it('sets event times but their content is null if not given', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const stop = new MobilityboxStop({
+        departure: {
+          predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+        },
+      }, mobilitybox);
+
+      expect(stop.arrival.predicted_at_formatted(), "stop.arrival.predicted_at").to.be.null;
+      expect(stop.arrival.scheduled_at_formatted(), "stop.arrival.scheduled_at").to.be.null;
+
+      expect(stop.departure.predicted_at_formatted(), "stop.departure.predicted_at").to.equal('1:42');
+      expect(stop.departure.scheduled_at_formatted(), "stop.departure.scheduled_at").to.be.null;
+    })
   });
 });
 

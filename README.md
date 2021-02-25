@@ -158,7 +158,6 @@ TODO: Add some background information what a trip actually is.
 - `name` - *string* | The name of the Trip
   - TODO: What tha hack is the trip name?
 - `stops`- *array* | An ordered list of all stops as `MobilityboxStop` on this trip. Including its station, departure and arrival times.
-  - TODO: Document what the status means?
 - `id` - *string* | An unique identifier for this trip. Its value might not be stable in future API versions. It is stable over multiple timetable updates, if the trip doesn't change.
 - `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
 
@@ -166,7 +165,7 @@ TODO: Add some background information what a trip actually is.
 - `date_formatted()` - returns the date of the trip in an human readable form. If the trip runs over multiple days, it gives you the first one.
   - TODO: Or is this the Betriebstag? (What if a trips starts at 26:00:00h?)
 - `origins_from()` - returns the starting station of the trip as `MobilityboxStation`
-- `destination()` - returns the last station of the trip as `MobilityboxStop`
+- `destination()` - returns the last station of the trip as `MobilityboxStation`
 
 
 ### MobilityboxEventTime | A wrapper for easy use of time
@@ -194,4 +193,15 @@ station.get_next_departures((departures)=>{
 });
 ```
 
-TODO: Add more documetation
+### MobilityboxStop | Combination of Station and Time
+An aggregation object that is describing a vehicle arriving and departuring at a specific time on a specific station.
+
+#### Attributes
+
+- `station` - *MobilityboxStation* | The station on wich the vehicle stops.
+- `status`- *string* | TODO: Not clear right now.
+- `arrival` // *MobilityboxEventTime* | Time when the vehicle will come to the station. It might be an MobilityboxEventTime where the values are null if it is the first station on the trip or the information is unclear (sometimes this is not given for stations where a train waits a long time).
+- `departure` - *MobilityboxEventTime* | Time when the vehicle will leave the station. It might be an MobilityboxEventTime where the values are null if it is the last station on the trip (sometimes this is not given for stations where people are not meant to enter a train).
+
+#### Methods
+- none

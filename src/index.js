@@ -245,12 +245,12 @@ export class MobilityboxTrip {
  * The class for a single stop in a trip
  */
 export class MobilityboxStop {
-  constructor(stop_parameters, mobilitybox) {
+  constructor(stop_parameters = {}, mobilitybox) {
     this.mobilitybox = mobilitybox;
 
-    this.station = new MobilityboxStation(stop_parameters.station);
-    this.status = stop_parameters.status;
-    this.departure = new MobilityboxEventTime(stop_parameters.departure);
+    this.station = (!!stop_parameters.station)?new MobilityboxStation(stop_parameters.station):null;
+    this.status = stop_parameters.status || null;
     this.arrival = new MobilityboxEventTime(stop_parameters.arrival);
+    this.departure = new MobilityboxEventTime(stop_parameters.departure);
   }
 }
