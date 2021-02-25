@@ -162,14 +162,15 @@ export class MobilityboxEventTime {
       this.scheduled_at = null;
       this.predicted_at = null;
     }else{
-      this.scheduled_at = new Date(event_time_parameters.scheduled_at);
+      this.scheduled_at = (event_time_parameters.scheduled_at)?new Date(event_time_parameters.scheduled_at):null;
       this.predicted_at = (event_time_parameters.predicted_at)?new Date(event_time_parameters.predicted_at):null;
     }
   }
 
-  scheduled_at_formated(){ return (!this.scheduled_at)?"":this._format_time(this.scheduled_at) };
-  predicted_at_formated(){ return (!this.predicted_at)?"":this._format_time(this.predicted_at) };
-  scheduled_at_date_formated(){ return (!this.scheduled_at)?"":this._format_date(this.scheduled_at) }
+  scheduled_at_formated(){ return (!this.scheduled_at)?null:this._format_time(this.scheduled_at) };
+  predicted_at_formated(){ return (!this.predicted_at)?null:this._format_time(this.predicted_at) };
+  scheduled_at_date_formated(){ return (!this.scheduled_at)?null:this._format_date(this.scheduled_at) }
+  predicted_at_date_formated(){ return (!this.predicted_at)?null:this._format_date(this.predicted_at) }
 
   _format_time(time){
     return ""+time.getHours()+':'+("00" + time.getMinutes()).slice (-2)

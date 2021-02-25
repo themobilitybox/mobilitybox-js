@@ -1,5 +1,7 @@
 # Mobilitybox.js [![Build](https://img.shields.io/circleci/build/github/themobilitybox/mobilitybox-js/main?style=for-the-badge)](https://app.circleci.com/pipelines/github/themobilitybox/mobilitybox-js)[![Coverage](https://img.shields.io/codecov/c/github/themobilitybox/mobilitybox-js?style=for-the-badge)](https://codecov.io/gh/themobilitybox/mobilitybox-js)[![Version](https://img.shields.io/npm/v/mobilitybox?style=for-the-badge)](https://www.npmjs.com/package/mobilitybox)
 
+# TODO: Update to use the Promise API
+
 A fast and easy to use wrapper for [the Mobilitybox](https://themobilitybox.com/). Get scheduling data at ease.
 
 - [Live Demo](https://developer.themobilitybox.com/examples/1/code)
@@ -165,5 +167,31 @@ TODO: Add some background information what a trip actually is.
   - TODO: Or is this the Betriebstag? (What if a trips starts at 26:00:00h?)
 - `origins_from()` - returns the starting station of the trip as `MobilityboxStation`
 - `destination()` - returns the last station of the trip as `MobilityboxStop`
+
+
+### MobilityboxEventTime | A wrapper for easy use of time
+An event time is used for departure times and also arrival times, it consists of actually two time-stamps. A `scheduled_at` and a `predicted_at` time, because they might differ. Usually used on departure objects: `departure.departure_time`
+
+#### Attributes
+- `scheduled_at` - *Date* | The date object of the time when the departure/arrival is supposed to happen. Is `null` if no time was given (this would be very unusual).
+- `predicted_at` - *Date* | The date object of the time when the departure/arrival will probable to happen. (As usually calculated by the control-room-software by knowing the vehicles current position.)  Is `null` if there is no prediction (predictions usually are only given a few minutes before departure/arrival time. So if you pull new data that might change.).
+
+#### Methods
+- `scheduled_at_formated()` - *String* | Gives you the scheduled time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (this would be very unusual).
+- `predicted_at_formated()` - *String* | Gives you the predicted time as a formatted string in german style. e.g. "8:06". Returns `null` if time is not set (predictions usually are only given a few minutes before departure/arrival time. So if you pull new data that might change.).
+- `scheduled_at_date_formated()` - *String* | Gives you the date as it is scheduled as a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set (this would be very unusual).
+- `predicted_at_date_formated()` - *String* | Gives you the date as it is predicted (usually this is the same date as scheduled, but it might differ, espacially late in the day.) a formatted string in german style. e.g. "18.2.2021". Returns `null` if time is not set.
+
+#### Example
+```
+station.get_next_departures((departures)=>{
+  departures.map((departure)=>{
+    console.log(
+      departure.departure_time.scheduled_at_formated(),
+      departure.departure_time.predicted_at_formated()
+    )
+  });
+});
+```
 
 TODO: Add more documetation
