@@ -85,6 +85,12 @@ Station search by a Geo-Position. Returns with a list of *MobilityboxStation* ob
 - *longitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
 - *latitude* | an object in Format `{latitude: 52.123, longitude: 13.123}` (Coordinates are floats in degree in WGS84)
 
+#### Mobilitybox.find_stations_by_id({id, id_type})
+
+Station search by its id. Returns a *MobilityboxStation* object.
+- *id* | the id of the station. Usually the start with: `vesputi:station:`
+- *id_type* (optional, default: mobilitybox) | you can search also for id from other sources like dhid, delfi or mobilitybox
+
 #### Mobilitybox.get_attributions()
 Returns an object including the Attributions suitable for HTML or as text and link.
 ```json

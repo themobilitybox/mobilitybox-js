@@ -48,18 +48,14 @@ export class Mobilitybox {
   }
 
   /**
-   * @typedef AttributionsHash
-   * @type {object}
-   * @property {string} html - The html-version
-   * @property {string} text - The text-only version
-   * @property {string} url - The URL to link to
-  */
-
-  /**
-   * This callback gets an object with an HTML/text-only version of
-   * @callback attributionsCallback
-   * @param {AttributionsHash} attributions
+   * Find stations by id
+   * @param {Object} id identifier of the station. Usually the start with: `vesputi:station:`
+   * @param {Object} id_type (optional, default: mobilitybox) you can search also for id from other sources like dhid, delfi or mobilitybox
    */
+  find_stations_by_id({id, id_type = 'mobilitybox'}){
+    return cancelable(axios.get(this.base_url+'/stations/search_by_id.json?query='+id+'&id_type='+id_type))
+      .then(response => new MobilityboxStation(response.data, this))
+  }
 
    /**
     * Get the attribution text and url to use in your app

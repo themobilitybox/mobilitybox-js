@@ -130,6 +130,42 @@ describe('Mobilitybox', ()=>{
     })
   });
 
+  describe('find_stations_by_id()', ()=>{
+    it('calls the correct search_by_id api endpoint', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const query_parameters = { query: "vesputi:station:foobar", id_type: "mobilitybox" };
+
+      const expected_result = {"name": "Hogsmead"};
+
+      mock('/stations/search_by_id.json', expected_result, query_parameters);
+
+      return mobilitybox.find_stations_by_id({id: "vesputi:station:foobar"}).then((station)=>{
+        console.log(station)
+        expect(station.name).to.equal("Hogsmead");
+      });
+
+    });
+
+    it('calls the correct search_by_id api endpoint if searched for an other id', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const query_parameters = { query: "de:foo:bar", id_type: "dhid" };
+
+      const expected_result = {"name": "Hogsmead"};
+
+      mock('/stations/search_by_id.json', expected_result, query_parameters);
+
+      return mobilitybox.find_stations_by_id({id: "de:foo:bar", id_type: "dhid"}).then((station)=>{
+        expect(station.name).to.equal("Hogsmead");
+      });
+
+    });
+
+    it('never returns after the call got canceled', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+        return never_returns_if_canceled(mobilitybox.find_stations_by_id({id: "Huch"}));
+    })
+  });
+
   describe('build_station()', ()=>{
     it('can create a MobilityboxStation by its data not from API', ()=>{
       const mobilitybox = new Mobilitybox('abc');
