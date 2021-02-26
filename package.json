@@ -37,6 +37,7 @@
     "test": "mocha ./src/index.test.js --require babel-core/register",
     "cover": "nyc --reporter=lcov --reporter=text-summary npm test",
     "report-coverage": "cat coverage/lcov.info | codecov",
+    "check-coverage": "nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "semantic-release": "semantic-release"
   },
   "config": {
