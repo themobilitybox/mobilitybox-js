@@ -140,6 +140,19 @@ You can access the urls only by refering to `mobilitybox.vector_tile_source().ti
 mapbox_map.addSource('station_tiles', window.mobilitybox.vector_tile_source())
 ```
 
+### CancablePromise | You can stop requests
+All Promises returned are cancable. You can stop each promise. After `cancel()`, the promise is never resolved.
+This is espacially usefull if you are loading departures on a station, but the user decides to select another station. So you can cancel the promise and go on.
+(Details on Github: [CancelablePromise](https://github.com/alkemics/CancelablePromise#readme))
+
+```js
+const request = station.get_next_departures().then((departures)=>{
+  console.log(departure.headsign); //This will not be executed
+})
+
+request.cancel()
+```
+
 ### MobilityboxStation | A Station object
 
 ### MobilityboxDeparture | A departure of a trip on a station
