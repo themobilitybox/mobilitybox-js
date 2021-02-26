@@ -16,12 +16,6 @@ export class Mobilitybox {
   }
 
   /**
-   * This callback gets stations from an async function.
-   * @callback stationCallback
-   * @param {MobilityboxStation[]} stations
-   */
-
-  /**
    * Find stations by name
    * @param findOptions The query to use for station name search
    * @param {String} findOptions.query The query to use for station name search
