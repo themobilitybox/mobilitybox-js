@@ -85,6 +85,18 @@ export class Mobilitybox {
   build_station(station_data){
     return new MobilityboxStation(station_data, this)
   }
+
+  /**
+   * Get a Mapbox compatible vector tile source
+   */
+  vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/map_tiles/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
 }
 
 /**

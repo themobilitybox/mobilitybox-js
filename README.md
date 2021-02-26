@@ -120,6 +120,20 @@ var station = mobilitybox.build_station({
 })
 ```
 
+#### Mobilitybox.vector_tile_source()
+In order to show stations and platforms on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed stations.)
+This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
+
+You can access the urls only by refering to `mobilitybox.vector_tile_source().tiles`.
+
+- [API Description](https://developer.themobilitybox.com/documentation/api#/Map/get_map_tiles__zoom_level___x___y__mvt)
+- [Vector Tile Spec](https://github.com/mapbox/vector-tile-spec)
+- [Add a Vector Tile Source to mapbox](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/)
+
+```js
+mapbox_map.addSource('station_tiles', window.mobilitybox.vector_tile_source())
+```
+
 ### MobilityboxStation | A Station object
 
 ### MobilityboxDeparture | A departure of a trip on a station

@@ -170,6 +170,17 @@ describe('Mobilitybox', ()=>{
       return never_returns_if_canceled(mobilitybox.get_trip({id: "foo"}));
     })
   });
+
+  describe('vector_tile_source()', ()=>{
+    it('returns a Mapbox compatible version of the vector tiles, including its source url', ()=>{
+      const mobilitybox = new Mobilitybox('abc')
+      const tile_source = mobilitybox.vector_tile_source()
+
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/map_tiles/{z}-{x}-{y}.mvt')
+      expect(tile_source.type).to.equal('vector')
+    })
+    it('transmits the api key to the endpoint')
+  })
 });
 
 
