@@ -367,8 +367,8 @@ describe('MobilityboxDeparture', ()=>{
       expect(departure.departure_time.predicted_at).to.not.be.undefined;
       expect(departure.departure_time.scheduled_at).to.not.be.null;
       expect(departure.departure_time.predicted_at).to.not.be.null;
-      expect(departure.departure_time.scheduled_at_formatted()).to.equal("1:23");
-      expect(departure.departure_time.predicted_at_formatted()).to.equal("1:42");
+      expect(departure.departure_time.scheduled_at_formatted()).to.equal("0:23"); //Tests run in Universal Time Coordinated
+      expect(departure.departure_time.predicted_at_formatted()).to.equal("0:42"); //Tests run in Universal Time Coordinated
 
       expect(departure.platform).to.equal("9 3/4");
     });
@@ -388,7 +388,7 @@ describe('MobilityboxDeparture', ()=>{
     expect(departure.departure_time.predicted_at).to.not.be.undefined;
     expect(departure.departure_time.scheduled_at).to.not.be.null;
     expect(departure.departure_time.predicted_at).to.be.null;
-    expect(departure.departure_time.scheduled_at_formatted()).to.equal("1:23");
+    expect(departure.departure_time.scheduled_at_formatted()).to.equal("0:23"); //Tests run in Universal Time Coordinated
     expect(departure.departure_time.predicted_at_formatted()).to.be.null;
   });
 
@@ -449,7 +449,7 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.scheduled_at_formatted()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.scheduled_at_formatted()).to.equal("0:23") //Tests run in Universal Time Coordinated
     });
 
     it('returns null if data is not set', ()=>{
@@ -475,7 +475,7 @@ describe('MobilityboxEventTime', ()=>{
         platform: "1"
       });
 
-      expect(event_time.predicted_at_formatted()).to.equal("1:23")//Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+      expect(event_time.predicted_at_formatted()).to.equal("0:23") //Tests run in Universal Time Coordinated
     });
 
     it('returns null if data is not set', ()=>{
@@ -583,13 +583,13 @@ describe('MobilityboxTrip', ()=>{
       },
       status: "a_status",
       departure: {
-        scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
-        predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+        scheduled_at: 1609464222000, //Fri Jan 01 2021 02:23:42 GMT+0100 (CET)
+        predicted_at: 1609465343000, //Fri Jan 01 2021 02:42:23 GMT+0100 (CET)
         platform: "9 3/4"
       },
       arrival: {
-        scheduled_at: 1609457022000, //Fri Jan 01 2021 00:23:42 GMT+0100 (CET)
-        predicted_at: 1609458143000, //Fri Jan 01 2021 00:42:23 GMT+0100 (CET)
+        scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+        predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
         platform: "9 3/4"
       }
     }]
@@ -695,8 +695,8 @@ describe('MobilityboxStop', ()=>{
 
       expect(stop.station.id, "stop.station").to.equal('a_station_id');
       expect(stop.status, "stop.status").to.equal('a_status');
-      expect(stop.arrival.predicted_at_formatted(), "stop.arrival").to.equal('0:42');
-      expect(stop.departure.predicted_at_formatted(), "stop.departure").to.equal('1:42');
+      expect(stop.arrival.predicted_at_formatted(), "stop.arrival").to.equal('23:42'); //Tests run in Universal Time Coordinated
+      expect(stop.departure.predicted_at_formatted(), "stop.departure").to.equal('0:42'); //Tests run in Universal Time Coordinated
     })
 
     it('works with empty data given', ()=>{
@@ -731,7 +731,7 @@ describe('MobilityboxStop', ()=>{
       expect(stop.arrival.predicted_at_formatted(), "stop.arrival.predicted_at").to.be.null;
       expect(stop.arrival.scheduled_at_formatted(), "stop.arrival.scheduled_at").to.be.null;
 
-      expect(stop.departure.predicted_at_formatted(), "stop.departure.predicted_at").to.equal('1:42');
+      expect(stop.departure.predicted_at_formatted(), "stop.departure.predicted_at").to.equal('0:42'); //Tests run in Universal Time Coordinated
       expect(stop.departure.scheduled_at_formatted(), "stop.departure.scheduled_at").to.be.null;
     })
   });

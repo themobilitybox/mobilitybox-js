@@ -35,7 +35,7 @@
     "build:umd": "webpack --output-filename mobilitybox.js --mode development",
     "build:umd.min": "webpack --output-filename mobilitybox.min.js --mode production",
     "watch:test": "npm test -- --watch --watch-extensions",
-    "test": "mocha ./src/index.test.js --require babel-core/register",
+    "test": "TZ=UTC mocha ./src/index.test.js --require babel-core/register",
     "cover": "nyc --reporter=lcov --reporter=text-summary npm test",
     "report-coverage": "cat coverage/lcov.info | codecov",
     "check-coverage": "nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
