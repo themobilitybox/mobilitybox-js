@@ -140,6 +140,18 @@ You can access the urls only by refering to `mobilitybox.vector_tile_source().ti
 mapbox_map.addSource('station_tiles', window.mobilitybox.vector_tile_source())
 ```
 
+#### Mobilitybox.relevant_routes_vector_tile_source()
+In order to show relevant routes on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed segments.)
+This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
+
+You can access the urls only by refering to `mobilitybox.relevant_routes_vector_tile_source().tiles`.
+
+- TODO: add link to api description
+
+```js
+mapbox_map.addSource('relevant_route_tiles', window.mobilitybox.relevant_routes_vector_tile_source())
+```
+
 ### CancablePromise | You can stop requests
 All Promises returned are cancable. You can stop each promise. After `cancel()`, the promise is never resolved.
 This is espacially usefull if you are loading departures on a station, but the user decides to select another station. So you can cancel the promise and go on.

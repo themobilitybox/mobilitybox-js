@@ -87,6 +87,15 @@ export class Mobilitybox {
       ]
     }
   }
+
+  relevant_routes_vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/relevant_routes/map_tiles/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
 }
 
 /**

@@ -217,6 +217,17 @@ describe('Mobilitybox', ()=>{
     })
     it('transmits the api key to the endpoint')
   })
+
+  describe('relevant_routes_vector_tile_source()', ()=>{
+    it('returns a Mapbox compatible version of the vector tiles of relevant routes, including its source url', ()=>{
+      const mobilitybox = new Mobilitybox('abc')
+      const tile_source = mobilitybox.relevant_routes_vector_tile_source()
+
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/relevant_routes/map_tiles/{z}-{x}-{y}.mvt')
+      expect(tile_source.type).to.equal('vector')
+    })
+    it('transmits the api key to the endpoint')
+  })
 });
 
 
