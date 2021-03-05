@@ -218,6 +218,7 @@ export class MobilityboxTrip {
    * @property {string} id - Trip ID
    * @property {string} name - Name of the trip
    * @property {Array} stops - Raw stops data
+   * @property {object} geojson - MultiLineString Geojson of trip path on the map
    */
 
   /**
@@ -231,6 +232,7 @@ export class MobilityboxTrip {
     this.id = trip_parameters.id || null;
     this.name = trip_parameters.name || null;
     this.stops = (trip_parameters.stops || []).map((stop_data)=> new MobilityboxStop(stop_data, this.mobilitybox));
+    this.geojson = trip_parameters.geojson || null;
   }
 
   /**

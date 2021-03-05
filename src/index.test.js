@@ -625,7 +625,13 @@ describe('MobilityboxTrip', ()=>{
         predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
         platform: "9 3/4"
       }
-    }]
+    }],
+    geojson: {
+      type: "MultiLineString",
+      coordinates: [
+        [[12.345, 23.456], [34.567, 45.678], [12.345, 23.456]]
+      ]
+    }
   };
 
   describe('attributes',()=>{
@@ -642,6 +648,8 @@ describe('MobilityboxTrip', ()=>{
       expect(trip.name).to.equal("a_trip_name");
       expect(trip.stops.length).to.equal(2);
       expect(trip.id).to.equal("a_trip_id");
+      expect(trip.geojson.type).to.equal("MultiLineString");
+      expect(trip.geojson.coordinates.length).to.equal(1);
     });
 
     it('deals with not given values properly', ()=>{
