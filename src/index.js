@@ -78,21 +78,49 @@ export class Mobilitybox {
 
   /**
    * Get a Mapbox compatible vector tile source
+   * @deprecated Since version 3.2. Will be deleted in version 4.0. Use station_map_vector_tile_source instead.
    */
   vector_tile_source(){
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/map_tiles/{z}-{x}-{y}.mvt"
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
       ]
     }
   }
 
+  /**
+   * Get a Mapbox compatible vector tile source including station and platform source layer
+   */
+  station_map_vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
+
+  /**
+   * @deprecated Since version 3.2. Will be deleted in version 4.0. Use transit_map_vector_tile_source instead.
+   */
   relevant_routes_vector_tile_source(){
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/relevant_routes/map_tiles/{z}-{x}-{y}.mvt"
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
+
+  /**
+   * Get a Mapbox compatible vector tile source including paths of routes
+   */
+  transit_map_vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
       ]
     }
   }

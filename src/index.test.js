@@ -212,7 +212,18 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/map_tiles/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.type).to.equal('vector')
+    })
+    it('transmits the api key to the endpoint')
+  })
+
+  describe('station_map_vector_tile_source()', ()=>{
+    it('returns a Mapbox compatible version of the vector tiles, including its source url', ()=>{
+      const mobilitybox = new Mobilitybox('abc')
+      const tile_source = mobilitybox.station_map_vector_tile_source()
+
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt')
       expect(tile_source.type).to.equal('vector')
     })
     it('transmits the api key to the endpoint')
@@ -223,7 +234,18 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.relevant_routes_vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/relevant_routes/map_tiles/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.type).to.equal('vector')
+    })
+    it('transmits the api key to the endpoint')
+  })
+
+  describe('transit_map_vector_tile_source()', ()=>{
+    it('returns a Mapbox compatible version of the vector tiles of the transit map, including its source url', ()=>{
+      const mobilitybox = new Mobilitybox('abc')
+      const tile_source = mobilitybox.transit_map_vector_tile_source()
+
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt')
       expect(tile_source.type).to.equal('vector')
     })
     it('transmits the api key to the endpoint')

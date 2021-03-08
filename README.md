@@ -126,7 +126,10 @@ var station = mobilitybox.build_station({
 })
 ```
 
-#### Mobilitybox.vector_tile_source()
+#### Mobilitybox.vector_tile_source() [DEPRECATED]
+
+This method is deprecated, please use ```Mobilitybox.station_map_vector_tile_source()```. The old method will be removed with version 4.0
+
 In order to show stations and platforms on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed stations.)
 This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
 
@@ -136,20 +139,52 @@ You can access the urls only by refering to `mobilitybox.vector_tile_source().ti
 - [Vector Tile Spec](https://github.com/mapbox/vector-tile-spec)
 - [Add a Vector Tile Source to mapbox](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/)
 
+#### Mobilitybox.station_map_vector_tile_source()
+
+In order to show stations and platforms on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed stations.)
+This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
+
+You can access the urls only by refering to `mobilitybox.station_map_vector_tile_source().tiles`.
+
+- [API Description](https://developer.themobilitybox.com/documentation/api#/Map/get_station_map__zoom_level___x___y__mvt)
+- [Vector Tile Spec](https://github.com/mapbox/vector-tile-spec)
+- [Add a Vector Tile Source to mapbox](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/)
+
 ```js
-mapbox_map.addSource('station_tiles', window.mobilitybox.vector_tile_source())
+mapbox_map.addSource('station_tiles', window.mobilitybox.station_map_vector_tile_source())
 ```
 
-#### Mobilitybox.relevant_routes_vector_tile_source()
+#### Mobilitybox.relevant_routes_vector_tile_source() [DEPRECATED]
+
+This method is deprecated, please use ```Mobilitybox.transit_map_vector_tile_source()```. The old method will be removed with version 4.0
+
 In order to show relevant routes on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed segments.)
 This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
 
 You can access the urls only by refering to `mobilitybox.relevant_routes_vector_tile_source().tiles`.
 
-- TODO: add link to api description
+- [API Description](https://developer.themobilitybox.com/documentation/api#/Map/get_relevant_routes_map_tiles__zoom_level___x___y__mvt)
+- [Vector Tile Spec](https://github.com/mapbox/vector-tile-spec)
+- [Add a Vector Tile Source to mapbox](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/)
 
 ```js
 mapbox_map.addSource('relevant_route_tiles', window.mobilitybox.relevant_routes_vector_tile_source())
+```
+
+#### Mobilitybox.transit_map_vector_tile_source()
+(DEPRECATED: Mobilitybox.relevant_routes_vector_tile_source())
+
+In order to show a transit map with paths for different routes on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed segments.)
+This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
+
+You can access the urls only by refering to `mobilitybox.transit_map_vector_tile_source().tiles`.
+
+- [API Description](https://developer.themobilitybox.com/documentation/api#/Map/get_transit_map__zoom_level___x___y__mvt)
+- [Vector Tile Spec](https://github.com/mapbox/vector-tile-spec)
+- [Add a Vector Tile Source to mapbox](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/)
+
+```js
+mapbox_map.addSource('transit_map_segments', window.mobilitybox.transit_map_vector_tile_source())
 ```
 
 ### CancablePromise | You can stop requests
