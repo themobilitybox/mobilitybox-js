@@ -109,6 +109,23 @@ const mobilitybox = new Mobilitybox('abc');
 var trip = await mobilitybox.get_trip({id: "vesputi:trip:foobar"})
 ```
 
+#### Mobilitybox.find_trip_by_characteristics({origins_from_station, destination_station, origins_from_departure_time, destination_arrival_time, [line_name]})    
+returns with a *MobilityboxTrip* object based on its meta information.
+- *origins_from_station* | *MobilityboxStop* or Identifier of the first station of the trip.
+- *destination_station* | *MobilityboxStop* or Identifier of the last station of the trip.
+- *origins_from_departure_time* | The departure time on the starting station as unix timestamp in milliseconds or as a *MobilityboxEventTime*
+- *destination_arrival_time* | The arrival time on the ending station as unix timestamp in milliseconds or as a *MobilityboxEventTime*
+- *line_name* | (optional) The short name of the corresponding line
+
+
+```js
+const mobilitybox = new Mobilitybox('abc');
+const origins_from_departure_time = new Date("2021-01-01T12:00:00").getTime();
+const destination_arrival_time = new Date("2021-01-01T13:00:00").getTime();
+
+var trip = await mobilitybox.get_trip({origins_from_station: "vesputi:station:1234", destination_station: "vesputi:station:5678", origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: "foobar"})
+```
+
 #### Mobilitybox.build_station(station_data)
 This creates a new `MobilityboxStation` object based on the given data without making a network request.
 This is espacially useful when taking station_data from outside the framework like from an object on a map.

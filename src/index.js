@@ -69,6 +69,32 @@ export class Mobilitybox {
   }
 
   /**
+   * Get a trip by its characteristics
+   * @param {object} origins_from_station MobilityboxStop or Identifier of the first station of the trip. Usually the start with: `vesputi:station:`
+   * @param {object} destination_station MobilityboxStop or Identifier of the last station of the trip. Usually the start with: `vesputi:station:`
+   * @param {object} origins_from_departure_time The departure time on the starting station as unix timestamp in milliseconds or as MobilityboxEventTime
+   * @param {object} destination_arrival_time The arrival time on the ending station as unix timestamp in milliseconds or as MobilityboxEventTime
+   * @param {String} line_name The short name of the corresponding line
+   * @return {MobilityboxTrip} found trip
+   */
+ find_trip_by_characteristics({origins_from_station, destination_station, origins_from_departure_time, destination_arrival_time, line_name}){
+   const parsed_origins_from_station = (origins_from_station instanceof MobilityboxStation) ? origins_from_station.id : origins_from_station
+   const parsed_destination_station = (destination_station instanceof MobilityboxStation) ? destination_station.id : destination_station
+   const parsed_origins_from_departure_time = (origins_from_departure_time instanceof MobilityboxEventTime) ? origins_from_departure_time.scheduled_at.getTime() : origins_from_departure_time
+   const parsed_destination_arrival_time = (destination_arrival_time instanceof MobilityboxEventTime) ? destination_arrival_time.scheduled_at.getTime() : destination_arrival_time
+
+   const origins_from_station_query = "origins_from_station="+encodeURIComponent(parsed_origins_from_station)
+   const origins_from_departure_time_query = "origins_from_departure_time="+parsed_origins_from_departure_time
+   const destination_station_query = "destination_station="+encodeURIComponent(parsed_destination_station)
+   const destination_arrival_time_query = "destination_arrival_time="+parsed_destination_arrival_time
+   const line_name_query = "line_name="+line_name
+
+   const query_string = `${origins_from_station_query}&${origins_from_departure_time_query}&${destination_station_query}&${destination_arrival_time_query}&${line_name ? line_name_query : ""}`
+   return cancelable(axios.get(this.base_url+'/trips/search_by_characteristics.json?'+query_string))
+     .then(response => new MobilityboxTrip(response.data, this))
+ }
+
+  /**
    * Create a station from raw data
    * @param {StationDataHash} station_data Raw Station data
    */

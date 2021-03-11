@@ -207,6 +207,52 @@ describe('Mobilitybox', ()=>{
     })
   });
 
+  describe('find_trip_by_characteristics()', ()=>{
+    let mobilitybox = new Mobilitybox('abc');
+    let origins_from_station = "vesputi:station:1234";
+    let mb_origins_from_station = new MobilityboxStation({id: "vesputi:station:1234", name: "Hogsmead Start"}, mobilitybox);
+    let destination_station = "vesputi:station:5678";
+    let mb_destination_station = new MobilityboxStation({id: "vesputi:station:5678", name: "Hogsmead End"}, mobilitybox);
+    let origins_from_departure_time = Date.now();
+    let mb_origins_from_departure_time = new MobilityboxEventTime({scheduled_at: Date.now()}, mobilitybox);
+    let destination_arrival_time = Date.now();
+    let mb_destination_arrival_time = new MobilityboxEventTime({scheduled_at: Date.now()}, mobilitybox);
+    let line_name = "lorem";
+
+    it('calls the correct search trip api endpoint with string parameters', ()=>{
+      const query_parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
+      const expected_result = {"id": "vesputi:trip:foobar", name: line_name, stops: [{station:{id: origins_from_station, name: "Hogsmead Start"}}, {station:{id: destination_station, name: "Hogsmead End"}}]};
+
+      mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
+      return mobilitybox.find_trip_by_characteristics(query_parameters).then((trip)=>{
+        expect(trip.stops[0].station.name).to.equal("Hogsmead Start");
+      });
+    });
+
+    it('calls the correct search trip api endpoint with mobilitybox model parameters', ()=>{
+      const query_parameters = {origins_from_station: mb_origins_from_station.id, destination_station: mb_destination_station.id, origins_from_departure_time: mb_origins_from_departure_time.scheduled_at.getTime(), destination_arrival_time: mb_destination_arrival_time.scheduled_at.getTime(), line_name: line_name};
+      const expected_result = {"id": "vesputi:trip:foobar", name: line_name, stops: [{station:{id: mb_origins_from_station.id, name: mb_origins_from_station.name}}, {station:{id: mb_destination_station.id, name: mb_destination_station.name}}]};
+      mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
+      return mobilitybox.find_trip_by_characteristics({origins_from_station: mb_origins_from_station, destination_station: mb_destination_station, origins_from_departure_time: mb_origins_from_departure_time, destination_arrival_time: mb_destination_arrival_time, line_name: line_name}).then((trip)=>{
+        expect(trip.stops[0].station.name).to.equal("Hogsmead Start");
+      });
+    });
+
+    it('calls the correct search trip api endpoint even without line_name', ()=>{
+      const query_parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time};
+      const expected_result = {"id": "vesputi:trip:foobar", name: "first found trip", stops: [{station:{id: origins_from_station, name: "Hogsmead Start"}}, {station:{id: destination_station, name: "Hogsmead End"}}]};
+
+      mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
+      return mobilitybox.find_trip_by_characteristics(query_parameters).then((trip)=>{
+        expect(trip.stops[0].station.name).to.equal("Hogsmead Start");
+      });
+    });
+
+    it('never returns after the call got canceled', ()=>{
+      return never_returns_if_canceled(mobilitybox.find_trip_by_characteristics({origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name}));
+    })
+  });
+
   describe('vector_tile_source()', ()=>{
     it('returns a Mapbox compatible version of the vector tiles, including its source url', ()=>{
       const mobilitybox = new Mobilitybox('abc')
