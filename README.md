@@ -262,6 +262,7 @@ A trip is a journey of a vehicle at a point in time. It starts somewhere, ends s
   - TODO: Document what the name of a trip is.
 - `stops`- *array* | An ordered list of all stops as `MobilityboxStop` on this trip. Including its station, departure and arrival times.
 - `id` - *string* | An unique identifier for this trip. Its value might not be stable in future API versions. It is stable over multiple timetable updates, if the trip doesn't change.
+- `geojson`- *object* | MultiLineString GeoJSON. It contains a List of Linestrings, where each of them describes a path of between a pair of stops of the trip.
 - `mobilitybox` // *Mobilitybox* | The underlying Mobilitybox object
 
 #### Methods
