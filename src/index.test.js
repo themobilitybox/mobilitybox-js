@@ -220,17 +220,18 @@ describe('Mobilitybox', ()=>{
     let line_name = "lorem";
 
     it('calls the correct search trip api endpoint with string parameters', ()=>{
-      const query_parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
+      const query_parameters = {origins_from_station_id: origins_from_station, destination_station_id: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
+      const parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
       const expected_result = {"id": "vesputi:trip:foobar", name: line_name, stops: [{station:{id: origins_from_station, name: "Hogsmead Start"}}, {station:{id: destination_station, name: "Hogsmead End"}}]};
 
       mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
-      return mobilitybox.find_trip_by_characteristics(query_parameters).then((trip)=>{
+      return mobilitybox.find_trip_by_characteristics(parameters).then((trip)=>{
         expect(trip.stops[0].station.name).to.equal("Hogsmead Start");
       });
     });
 
     it('calls the correct search trip api endpoint with mobilitybox model parameters', ()=>{
-      const query_parameters = {origins_from_station: mb_origins_from_station.id, destination_station: mb_destination_station.id, origins_from_departure_time: mb_origins_from_departure_time.scheduled_at.getTime(), destination_arrival_time: mb_destination_arrival_time.scheduled_at.getTime(), line_name: line_name};
+      const query_parameters = {origins_from_station_id: mb_origins_from_station.id, destination_station_id: mb_destination_station.id, origins_from_departure_time: mb_origins_from_departure_time.scheduled_at.getTime(), destination_arrival_time: mb_destination_arrival_time.scheduled_at.getTime(), line_name: line_name};
       const expected_result = {"id": "vesputi:trip:foobar", name: line_name, stops: [{station:{id: mb_origins_from_station.id, name: mb_origins_from_station.name}}, {station:{id: mb_destination_station.id, name: mb_destination_station.name}}]};
       mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
       return mobilitybox.find_trip_by_characteristics({origins_from_station: mb_origins_from_station, destination_station: mb_destination_station, origins_from_departure_time: mb_origins_from_departure_time, destination_arrival_time: mb_destination_arrival_time, line_name: line_name}).then((trip)=>{
@@ -239,11 +240,12 @@ describe('Mobilitybox', ()=>{
     });
 
     it('calls the correct search trip api endpoint even without line_name', ()=>{
-      const query_parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time};
+      const query_parameters = {origins_from_station_id: origins_from_station, destination_station_id: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time};
+      const parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time};
       const expected_result = {"id": "vesputi:trip:foobar", name: "first found trip", stops: [{station:{id: origins_from_station, name: "Hogsmead Start"}}, {station:{id: destination_station, name: "Hogsmead End"}}]};
 
       mock('/trips/search_by_characteristics.json', expected_result, query_parameters);
-      return mobilitybox.find_trip_by_characteristics(query_parameters).then((trip)=>{
+      return mobilitybox.find_trip_by_characteristics(parameters).then((trip)=>{
         expect(trip.stops[0].station.name).to.equal("Hogsmead Start");
       });
     });
