@@ -110,7 +110,7 @@ var trip = await mobilitybox.get_trip({id: "vesputi:trip:foobar"})
 ```
 
 #### Mobilitybox.find_trip_by_characteristics({origins_from_station, destination_station, origins_from_departure_time, destination_arrival_time, [line_name]})    
-returns with a *MobilityboxTrip* object based on its meta information.
+returns a Promise to a *MobilityboxTrip*.
 - *origins_from_station* | *MobilityboxStop* or Identifier of the first station of the trip.
 - *destination_station* | *MobilityboxStop* or Identifier of the last station of the trip.
 - *origins_from_departure_time* | The departure time on the starting station as unix timestamp in milliseconds or as a *MobilityboxEventTime*
@@ -191,7 +191,7 @@ mapbox_map.addSource('relevant_route_tiles', window.mobilitybox.relevant_routes_
 #### Mobilitybox.transit_map_vector_tile_source()
 (DEPRECATED: Mobilitybox.relevant_routes_vector_tile_source())
 
-In order to show a transit map with paths for different routes on a map it is usefull to transfer them as map tiles. (Gives you only the currently displayed segments.)
+The transit map layer is a set of lines on a map which represent the typical routes public transit vehicles take. This includes for example buses, trams and subways. This transit map layer might show routes of different importance on different zoom levels.
 This returns a Mapbox compatible structure to set a source of these tiles including its urls (may be multiple for load-distribution).
 
 You can access the urls only by refering to `mobilitybox.transit_map_vector_tile_source().tiles`.
