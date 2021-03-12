@@ -69,6 +69,32 @@ export class Mobilitybox {
   }
 
   /**
+   * Get a trip by its characteristics
+   * @param {object} origins_from_station MobilityboxStop or Identifier of the first station of the trip. Usually they start with: `vesputi:station:`
+   * @param {object} destination_station MobilityboxStop or Identifier of the last station of the trip. Usually they start with: `vesputi:station:`
+   * @param {object} origins_from_departure_time The departure time of the origin station as a unix timestamp in milliseconds or a MobilityboxEventTime object
+   * @param {object} destination_arrival_time The arrival time of the destination station as unix timestamp in milliseconds or as MobilityboxEventTime
+   * @param {String} line_name The short name of the corresponding line
+   * @return {Promise<MobilityboxTrip>} returns Promise to found MobilityboxTrip
+   */
+ find_trip_by_characteristics({origins_from_station, destination_station, origins_from_departure_time, destination_arrival_time, line_name}){
+   const parsed_origins_from_station = (origins_from_station instanceof MobilityboxStation) ? origins_from_station.id : origins_from_station
+   const parsed_destination_station = (destination_station instanceof MobilityboxStation) ? destination_station.id : destination_station
+   const parsed_origins_from_departure_time = (origins_from_departure_time instanceof MobilityboxEventTime) ? origins_from_departure_time.scheduled_at.getTime() : origins_from_departure_time
+   const parsed_destination_arrival_time = (destination_arrival_time instanceof MobilityboxEventTime) ? destination_arrival_time.scheduled_at.getTime() : destination_arrival_time
+
+   const origins_from_station_id_query = "origins_from_station_id="+encodeURIComponent(parsed_origins_from_station)
+   const origins_from_departure_time_query = "origins_from_departure_time="+parsed_origins_from_departure_time
+   const destination_station_id_query = "destination_station_id="+encodeURIComponent(parsed_destination_station)
+   const destination_arrival_time_query = "destination_arrival_time="+parsed_destination_arrival_time
+   const line_name_query = "line_name="+line_name
+
+   const query_string = `${origins_from_station_id_query}&${origins_from_departure_time_query}&${destination_station_id_query}&${destination_arrival_time_query}&${line_name ? line_name_query : ""}`
+   return cancelable(axios.get(this.base_url+'/trips/search_by_characteristics.json?'+query_string))
+     .then(response => new MobilityboxTrip(response.data, this))
+ }
+
+  /**
    * Create a station from raw data
    * @param {StationDataHash} station_data Raw Station data
    */
@@ -78,21 +104,49 @@ export class Mobilitybox {
 
   /**
    * Get a Mapbox compatible vector tile source
+   * @deprecated Since version 3.2. Will be deleted in version 4.0. Use station_map_vector_tile_source instead.
    */
   vector_tile_source(){
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/map_tiles/{z}-{x}-{y}.mvt"
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
       ]
     }
   }
 
+  /**
+   * Get a Mapbox compatible vector tile source including station and platform source layer
+   */
+  station_map_vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
+
+  /**
+   * @deprecated Since version 3.2. Will be deleted in version 4.0. Use transit_map_vector_tile_source instead.
+   */
   relevant_routes_vector_tile_source(){
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/relevant_routes/map_tiles/{z}-{x}-{y}.mvt"
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
+      ]
+    }
+  }
+
+  /**
+   * Get a Mapbox compatible vector tile source including paths of routes
+   */
+  transit_map_vector_tile_source(){
+    return {
+      type: 'vector',
+      tiles: [
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
       ]
     }
   }
@@ -190,6 +244,7 @@ export class MobilityboxTrip {
    * @property {string} id - Trip ID
    * @property {string} name - Name of the trip
    * @property {Array} stops - Raw stops data
+   * @property {object} geojson - MultiLineString Geojson of trip path on the map
    */
 
   /**
@@ -203,6 +258,7 @@ export class MobilityboxTrip {
     this.id = trip_parameters.id || null;
     this.name = trip_parameters.name || null;
     this.stops = (trip_parameters.stops || []).map((stop_data)=> new MobilityboxStop(stop_data, this.mobilitybox));
+    this.geojson = trip_parameters.geojson || null;
   }
 
   /**
