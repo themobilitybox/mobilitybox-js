@@ -9,10 +9,12 @@ export class Mobilitybox {
    * Create the API access object with your API key
    * @param {String} access_token You API Access Token
    * @param {String} base_url The base URL used (optional)
+   * @property {String} session_token
    */
   constructor(access_token, base_url = "https://api.themobilitybox.com/v1") {
     this.access_token = access_token;
     this.base_url = base_url;
+    this.session_token = null;
   }
 
   /**
@@ -28,8 +30,13 @@ export class Mobilitybox {
       uri += `&longitude=${longitude}&latitude=${latitude}`
     }
 
-    return cancelable(axios.get(uri))
-      .then(response => response.data.map((station_data)=> new MobilityboxStation(station_data, this)));
+    return cancelable(axios.get(uri, {headers: get_request_headers(this) }))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.session_token = response.headers['session-token'];
+        }
+        return response.data.map((station_data)=> new MobilityboxStation(station_data, this));
+      });
   }
 
   /**
@@ -37,8 +44,13 @@ export class Mobilitybox {
    * @param {Object} position An object containing latitude and longitude for positions
    */
   find_stations_by_position(position){
-    return cancelable(axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude))
-      .then(response => response.data.map((station_data)=> new MobilityboxStation(station_data, this)))
+    return cancelable(axios.get(this.base_url+'/stations/search_by_position.json?latitude='+position.latitude+'&longitude='+position.longitude, {headers: get_request_headers(this) }))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.session_token = response.headers['session-token'];
+        }
+        return response.data.map((station_data)=> new MobilityboxStation(station_data, this));
+      })
   }
 
   /**
@@ -47,16 +59,26 @@ export class Mobilitybox {
    * @param {Object} id_type (optional, default: mobilitybox) you can search also for id from other sources like dhid, delfi or mobilitybox
    */
   find_stations_by_id({id, id_type = 'mobilitybox'}){
-    return cancelable(axios.get(this.base_url+'/stations/search_by_id.json?query='+id+'&id_type='+id_type))
-      .then(response => new MobilityboxStation(response.data, this))
+    return cancelable(axios.get(this.base_url+'/stations/search_by_id.json?query='+id+'&id_type='+id_type, {headers: get_request_headers(this) }))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.session_token = response.headers['session-token'];
+        }
+        return new MobilityboxStation(response.data, this);
+      })
   }
 
    /**
     * Get the attribution text and url to use in your app
     */
   get_attributions(){
-    return cancelable(axios.get(this.base_url+'/attributions.json'))
-      .then(response => response.data)
+    return cancelable(axios.get(this.base_url+'/attributions.json', {headers: get_request_headers(this) }))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.session_token = response.headers['session-token'];
+        }
+        return response.data;
+      })
   }
 
    /**
@@ -64,8 +86,13 @@ export class Mobilitybox {
     * @param {String} trip_id The Trip ID
     */
   get_trip({id}){
-    return cancelable(axios.get(this.base_url+'/trips/'+id+'.json'))
-      .then(response => new MobilityboxTrip(response.data, this))
+    return cancelable(axios.get(this.base_url+'/trips/'+id+'.json', {headers: get_request_headers(this) }))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.session_token = response.headers['session-token'];
+        }
+        return new MobilityboxTrip(response.data, this);
+      })
   }
 
   /**
@@ -90,8 +117,13 @@ export class Mobilitybox {
    const line_name_query = "line_name="+line_name
 
    const query_string = `${origins_from_station_id_query}&${origins_from_departure_time_query}&${destination_station_id_query}&${destination_arrival_time_query}&${line_name ? line_name_query : ""}`
-   return cancelable(axios.get(this.base_url+'/trips/search_by_characteristics.json?'+query_string))
-     .then(response => new MobilityboxTrip(response.data, this))
+   return cancelable(axios.get(this.base_url+'/trips/search_by_characteristics.json?'+query_string, {headers: get_request_headers(this) }))
+     .then(response => {
+       if (response.headers['session-token']){
+         this.session_token = response.headers['session-token'];
+       }
+       return new MobilityboxTrip(response.data, this);
+     })
  }
 
   /**
@@ -110,7 +142,7 @@ export class Mobilitybox {
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt?" + get_request_api_key_params(this)
       ]
     }
   }
@@ -122,7 +154,7 @@ export class Mobilitybox {
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/station_map/{z}-{x}-{y}.mvt"
+        this.base_url + "/station_map/{z}-{x}-{y}.mvt?" + get_request_api_key_params(this)
       ]
     }
   }
@@ -134,7 +166,7 @@ export class Mobilitybox {
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt?" + get_request_api_key_params(this)
       ]
     }
   }
@@ -146,11 +178,32 @@ export class Mobilitybox {
     return {
       type: 'vector',
       tiles: [
-        this.base_url + "/transit_map/{z}-{x}-{y}.mvt"
+        this.base_url + "/transit_map/{z}-{x}-{y}.mvt?" + get_request_api_key_params(this)
       ]
     }
   }
 }
+
+
+const get_request_headers = (mobilitybox) => {
+  var headers = {};
+  if (mobilitybox.session_token){
+    headers["Session-Token"] = mobilitybox.session_token;
+  }
+  if (mobilitybox.access_token){
+    headers["Authorization"] = "Bearer " + mobilitybox.access_token;
+  }
+  return headers;
+}
+
+const get_request_api_key_params = (mobilitybox) => {
+  if (mobilitybox.access_token){
+    return "api_key="+mobilitybox.access_token
+  }else{
+    return ""
+  }
+}
+
 
 /**
  * The class representing a single Station
@@ -180,8 +233,13 @@ export class MobilityboxStation {
   get_next_departures(parameters) {
     const time = (!!parameters && !!parameters.time)?parameters.time:Date.now()
     return cancelable(axios
-      .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time))
-      .then(response => response.data.map((departure_data)=> new MobilityboxDeparture(departure_data, this.mobilitybox)))
+      .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time, {headers: get_request_headers(this.mobilitybox)}))
+      .then(response => {
+        if (response.headers['session-token']){
+          this.mobilitybox.session_token = response.headers['session-token'];
+        }
+        return response.data.map((departure_data)=> new MobilityboxDeparture(departure_data, this.mobilitybox));
+      })
   }
 }
 
