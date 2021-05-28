@@ -1,16 +1,17 @@
 import { Mobilitybox, MobilityboxStation, MobilityboxDeparture, MobilityboxTrip, MobilityboxEventTime, MobilityboxStop } from './index.js'
 import { expect } from 'chai';
 import nock from 'nock'
+const { v4: uuidv4 } = require('uuid');
 
 // Configure Axios (http-framework) for getting compatible with nock (mocking http-requests)
 import axios from 'axios';
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-function mock(path, return_value, query){
-  return nock('https://api.themobilitybox.com')
+function mock(path, return_value, query, request_headers, response_headers){
+  return nock('https://api.themobilitybox.com', {reqheaders: request_headers})
   .get('/v1'+path)
   .query(query || true)
-  .reply(200, return_value)
+  .reply(200, return_value, response_headers)
 }
 
 describe('Mobilitybox', ()=>{
@@ -18,6 +19,18 @@ describe('Mobilitybox', ()=>{
     it('initializes with an api token', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       expect(mobilitybox.access_token).to.equal("abc");
+    });
+
+    it('answers with 401 if no api key is provided', ()=>{
+      const mobilitybox = new Mobilitybox();
+
+      nock('https://api.themobilitybox.com')
+        .get('/v1/attributions.json')
+        .reply(401, "the request must contain at least one of [api_key in query-parameters, Authorization-Header]")
+
+      mobilitybox.get_attributions().catch((error) => {
+        expect(error).to.have.status(401);
+      })
     });
 
     it('can initialize without a base url', ()=>{
@@ -29,6 +42,41 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc', 'https://foobar.lol/v42');
       expect(mobilitybox.base_url).to.equal("https://foobar.lol/v42");
     });
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+
+      mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"}, null, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token})
+      return mobilitybox.get_attributions().then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
+
+    it('does use saved session token in mobilitybox class for request and get the same back', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const session_token = uuidv4()
+      mobilitybox.session_token = session_token
+
+      mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"}, null, {'Authorization': 'Bearer abc', 'Session-Token': session_token }, {'Session-Token': session_token})
+      return mobilitybox.get_attributions().then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    })
+
+    it('does not update session_token if response has no session-token header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      const session_token = uuidv4()
+      mobilitybox.session_token = session_token
+
+      mock('/attributions.json', {html: "html", url: "foobar", text: "mocked attributions"}, null, {'Authorization': 'Bearer abc', 'Session-Token': session_token })
+      return mobilitybox.get_attributions().then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    })
+
   });
 
   describe('get_attributions()',()=>{
@@ -107,6 +155,29 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       return never_returns_if_canceled(mobilitybox.find_stations_by_name("foobar"));
     })
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const query_parameters = { query: "hbf" };
+      const expected_result = [
+          {
+            "name": "Duisburg Hbf",
+            "id": "vesputi:station:OW%2F67E4OIaGwDh9unt3wdUxCpyQwy1Qe77N3yRjaWTU",
+            "position": {
+              "latitude": 51.430453,
+              "longitude": 6.774528
+            }
+          }
+      ];
+
+      mock('/stations/search_by_name.json', expected_result, query_parameters, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+      return mobilitybox.find_stations_by_name(query_parameters).then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 
   describe('find_stations_by_position()', ()=>{
@@ -127,7 +198,23 @@ describe('Mobilitybox', ()=>{
     it('never returns after the call got canceled', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       return never_returns_if_canceled(mobilitybox.find_stations_by_position({}));
-    })
+    });
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const query_parameters = { latitude: 12.345, longitude: 23.456 };
+
+      const expected_result = [{"name": "Hogsmead"}];
+
+      mock('/stations/search_by_position.json', expected_result, query_parameters, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+
+      return mobilitybox.find_stations_by_position(query_parameters).then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 
   describe('find_stations_by_id()', ()=>{
@@ -163,7 +250,22 @@ describe('Mobilitybox', ()=>{
     it('never returns after the call got canceled', ()=>{
       const mobilitybox = new Mobilitybox('abc');
         return never_returns_if_canceled(mobilitybox.find_stations_by_id({id: "Huch"}));
-    })
+    });
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const query_parameters = { query: "de:foo:bar", id_type: "dhid" };
+      const expected_result = {"name": "Hogsmead"};
+
+      mock('/stations/search_by_id.json', expected_result, query_parameters, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+
+      return mobilitybox.find_stations_by_id({id: "de:foo:bar", id_type: "dhid"}).then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 
   describe('build_station()', ()=>{
@@ -205,6 +307,21 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       return never_returns_if_canceled(mobilitybox.get_trip({id: "foo"}));
     })
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const trip_id = "vesputi:trip:foobar";
+      const expected_result = {"id": "vesputi:trip:foobar", stops: [{station:{name: "Hogsmead"}}]};
+
+      mock('/trips/'+trip_id+'.json', expected_result, null, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+
+      return mobilitybox.get_trip({id: trip_id}).then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 
   describe('find_trip_by_characteristics()', ()=>{
@@ -252,7 +369,22 @@ describe('Mobilitybox', ()=>{
 
     it('never returns after the call got canceled', ()=>{
       return never_returns_if_canceled(mobilitybox.find_trip_by_characteristics({origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name}));
-    })
+    });
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const query_parameters = {origins_from_station_id: origins_from_station, destination_station_id: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
+      const parameters = {origins_from_station: origins_from_station, destination_station: destination_station, origins_from_departure_time: origins_from_departure_time, destination_arrival_time: destination_arrival_time, line_name: line_name};
+      const expected_result = {"id": "vesputi:trip:foobar", name: line_name, stops: [{station:{id: origins_from_station, name: "Hogsmead Start"}}, {station:{id: destination_station, name: "Hogsmead End"}}]};
+
+      mock('/trips/search_by_characteristics.json', expected_result, query_parameters, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+      return mobilitybox.find_trip_by_characteristics(parameters).then((trip)=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 
   describe('vector_tile_source()', ()=>{
@@ -260,7 +392,7 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt?api_key='+mobilitybox.access_token)
       expect(tile_source.type).to.equal('vector')
     })
     it('transmits the api key to the endpoint')
@@ -271,10 +403,23 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.station_map_vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt?api_key='+mobilitybox.access_token)
       expect(tile_source.type).to.equal('vector')
     })
-    it('transmits the api key to the endpoint')
+    it('transmits the api key to the endpoint', ()=>{
+      const api_key = uuidv4();
+      const mobilitybox = new Mobilitybox(api_key)
+
+      const tile_source = mobilitybox.vector_tile_source()
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt?api_key='+api_key)
+    });
+
+    it('transmits no api key to the endpoint when no one is given', ()=>{
+      const mobilitybox = new Mobilitybox()
+
+      const tile_source = mobilitybox.vector_tile_source()
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/station_map/{z}-{x}-{y}.mvt?')
+    })
   })
 
   describe('relevant_routes_vector_tile_source()', ()=>{
@@ -282,7 +427,7 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.relevant_routes_vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt?api_key='+mobilitybox.access_token)
       expect(tile_source.type).to.equal('vector')
     })
     it('transmits the api key to the endpoint')
@@ -293,7 +438,7 @@ describe('Mobilitybox', ()=>{
       const mobilitybox = new Mobilitybox('abc')
       const tile_source = mobilitybox.transit_map_vector_tile_source()
 
-      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt')
+      expect(tile_source.tiles[0]).to.equal('https://api.themobilitybox.com/v1/transit_map/{z}-{x}-{y}.mvt?api_key='+mobilitybox.access_token)
       expect(tile_source.type).to.equal('vector')
     })
     it('transmits the api key to the endpoint')
@@ -410,7 +555,39 @@ describe('MobilityboxStation', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const station = mobilitybox.build_station({id: "vesputi:station:foobar"});
       return never_returns_if_canceled(station.get_next_departures());
-    })
+    });
+
+    it('updates session_token with session-token in response header', ()=>{
+      const mobilitybox = new Mobilitybox('abc');
+      expect(mobilitybox.session_token).to.equal(null);
+
+      const session_token = uuidv4();
+      const station = mobilitybox.build_station({id: "vesputi:station:foobar"});
+      const query_parameters = {station_id: "vesputi:station:foobar", time: Date.now()}
+      const expected_result = [{
+        trip: {
+          id: "a_trip_id",
+          headsign: "hogwarts",
+          line_name: "5972",
+          type: {
+            kind:	'steam_express',
+            product: 'Hogwarts Express'
+          },
+          provider: "Hogwarts Express Railway Authorities"
+        },
+        departure: {
+          scheduled_at: 1609460622000, //Fri Jan 01 2021 01:23:42 GMT+0100 (CET)
+          predicted_at: 1609461743000, //Fri Jan 01 2021 01:42:23 GMT+0100 (CET)
+          platform: "9 3/4"
+        },
+      }];
+
+      mock('/departures.json', expected_result, query_parameters, {'Authorization': 'Bearer abc' }, {'Session-Token': session_token});
+
+      return station.get_next_departures({time: query_parameters.time}).then(()=>{
+        expect(mobilitybox.session_token).to.equal(session_token);
+      });
+    });
   });
 });
 
