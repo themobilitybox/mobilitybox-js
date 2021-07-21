@@ -523,7 +523,7 @@ describe('MobilityboxStation', ()=>{
       const mobilitybox = new Mobilitybox('abc');
       const station = mobilitybox.build_station({id: "vesputi:station:foobar"});
 
-      const query_parameters = {station_id: "vesputi:station:foobar", time: Date.now()}
+      const query_parameters = {station_id: "vesputi:station:foobar", time: Date.now(), max_departures: 3}
 
       const expected_result = [{
         trip: {
@@ -545,8 +545,9 @@ describe('MobilityboxStation', ()=>{
 
       mock('/departures.json', expected_result, query_parameters);
 
-      return station.get_next_departures({time: query_parameters.time}).then((departures)=>{
+      return station.get_next_departures({time: query_parameters.time, max_departures: query_parameters.max_departures}).then((departures)=>{
         expect(departures[0].headsign).to.equal("hogwarts");
+        expect(departures.length).to.be.below(query_parameters.max_departures+1);
       });
 
     });
