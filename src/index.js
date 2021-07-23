@@ -229,11 +229,13 @@ export class MobilityboxStation {
   /**
    * Fetch Next Departures for this Station
    * @param {Date} time A time to receive departures for (defaults to now)
+   * @param {Integer} max_departures A number of maximum received departures (between 1 - 100, default 10)
    */
   get_next_departures(parameters) {
     const time = (!!parameters && !!parameters.time)?parameters.time:Date.now()
+    const max_departures = (!!parameters && !!parameters.max_departures)?parameters.max_departures:null
     return cancelable(axios
-      .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time, {headers: get_request_headers(this.mobilitybox)}))
+      .get(this.mobilitybox.base_url+'/departures.json?station_id='+this.id+'&time='+time+(max_departures?('&max_departures='+max_departures):''), {headers: get_request_headers(this.mobilitybox)}))
       .then(response => {
         if (response.headers['session-token']){
           this.mobilitybox.session_token = response.headers['session-token'];
